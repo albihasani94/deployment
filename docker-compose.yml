@@ -1,8 +1,8 @@
 name: deployment
 
 services:
-  database:
-    image: postgres:17-alpine
+  organization_db:
+    image: postgres:18-alpine
     ports:
       - "15432:5432"
     environment:
@@ -10,7 +10,19 @@ services:
       - POSTGRES_DB=ostock_dev
       - POSTGRES_PASSWORD=postgres
     volumes:
-      - ./compose/:/docker-entrypoint-initdb.d/
+      - ./compose/organization/:/docker-entrypoint-initdb.d/
+    networks:
+      - organization
+  licensing_db:
+    image: postgres:18-alpine
+    ports:
+      - "25432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=ostock_dev
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - ./compose/licensing/:/docker-entrypoint-initdb.d/
     networks:
       - licensing
   config-service:
@@ -24,6 +36,29 @@ services:
       interval: 3s
       timeout: 3s
       retries: 3
+  eurekaserver:
+    image: ostock/eureka-server:0.0.1-SNAPSHOT
+    ports:
+      - "8070:8070"
+    depends_on:
+      config-service:
+        condition: service_healthy
+    networks:
+      - config
+      - eureka
+  organization-service:
+    image: ostock/organization-service:0.0.1-SNAPSHOT
+    depends_on:
+      config-service:
+        condition: service_healthy
+    ports:
+      - "8081:8081"
+    networks:
+      - organization
+      - config
+      - eureka
+    environment:
+      spring.profiles.active: "docker"
   licensing-service:
     image: ostock/licensing-service:0.0.1-SNAPSHOT
     depends_on:
@@ -32,11 +67,14 @@ services:
     ports:
       - "8080:8080"
     networks:
-      - licensing
       - config
+      - eureka
+      - licensing
     environment:
       spring.profiles.active: "docker"
 
 networks:
-  licensing:
   config:
+  eureka:
+  organization:
+  licensing:
