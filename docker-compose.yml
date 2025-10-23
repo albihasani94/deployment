@@ -86,6 +86,7 @@ services:
       - config
       - eureka
       - licensing
+      - organization
     environment:
       spring.profiles.active: "docker"
 
