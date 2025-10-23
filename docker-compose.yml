@@ -13,6 +13,11 @@ services:
       - ./compose/organization/:/docker-entrypoint-initdb.d/
     networks:
       - organization
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
   licensing_db:
     image: postgres:18-alpine
     ports:
@@ -25,6 +30,11 @@ services:
       - ./compose/licensing/:/docker-entrypoint-initdb.d/
     networks:
       - licensing
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
   config-service:
     image: ostock/config-server:0.0.1-SNAPSHOT
     ports:
@@ -46,10 +56,14 @@ services:
     networks:
       - config
       - eureka
+    environment:
+      spring.profiles.active: "docker"
   organization-service:
     image: ostock/organization-service:0.0.1-SNAPSHOT
     depends_on:
       config-service:
+        condition: service_healthy
+      organization_db:
         condition: service_healthy
     ports:
       - "8081:8081"
@@ -63,6 +77,8 @@ services:
     image: ostock/licensing-service:0.0.1-SNAPSHOT
     depends_on:
       config-service:
+        condition: service_healthy
+      licensing_db:
         condition: service_healthy
     ports:
       - "8080:8080"
