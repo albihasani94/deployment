@@ -15,7 +15,7 @@ services:
       - organization
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 5s
+      interval: 15s
       timeout: 5s
       retries: 10
   licensing_db:
@@ -32,7 +32,7 @@ services:
       - licensing
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 5s
+      interval: 15s
       timeout: 5s
       retries: 10
   config-service:
@@ -43,8 +43,8 @@ services:
       - config
     healthcheck:
       test: "wget -T5 -qO- http://localhost:8071/actuator/health | grep UP || exit 1"
-      interval: 3s
-      timeout: 3s
+      interval: 5s
+      timeout: 5s
       retries: 3
   eurekaserver:
     image: ostock/eureka-server:0.0.1-SNAPSHOT
