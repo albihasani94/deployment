@@ -41,18 +41,27 @@ services:
       - "8071:8071"
     networks:
       - config
-    healthcheck:
-      test: "wget -T5 -qO- http://localhost:8071/actuator/health | grep UP || exit 1"
-      interval: 5s
-      timeout: 5s
-      retries: 3
+  config-ready:
+    image: alpine:latest
+    depends_on:
+      config-service:
+        condition: service_started
+    command:
+      - /bin/sh
+      - -c
+      - >
+        until wget -qO- http://config-service:8071/actuator/health | grep -q '"status":"UP"'; do
+          sleep 1;
+        done
+    networks:
+      - config
   eurekaserver:
     image: ostock/eureka-server:0.0.1-SNAPSHOT
     ports:
       - "8070:8070"
     depends_on:
-      config-service:
-        condition: service_healthy
+      config-ready:
+        condition: service_completed_successfully
     networks:
       - config
       - eureka
@@ -61,8 +70,8 @@ services:
   organization-service:
     image: ostock/organization-service:0.0.1-SNAPSHOT
     depends_on:
-      config-service:
-        condition: service_healthy
+      config-ready:
+        condition: service_completed_successfully
       organization_db:
         condition: service_healthy
     ports:
@@ -76,8 +85,8 @@ services:
   licensing-service:
     image: ostock/licensing-service:0.0.1-SNAPSHOT
     depends_on:
-      config-service:
-        condition: service_healthy
+      config-ready:
+        condition: service_completed_successfully
       licensing_db:
         condition: service_healthy
     ports:

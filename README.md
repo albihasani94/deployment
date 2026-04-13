@@ -16,7 +16,7 @@ From this repository execute:
 docker compose up
 ```
 
-This command rebuilds any stale images, starts the shared databases, and waits for the Config Server to report healthy before launching dependent services.
+This command rebuilds any stale images, starts the shared databases, waits for the Config Server readiness gate, and then launches the dependent services.
 
 Each Spring Boot container runs with `spring.profiles.active=docker`, so it loads the network-aware configuration served by the Config Server. If you override environment variables locally, be sure to preserve the uppercase profile key so Spring picks it up.
 
