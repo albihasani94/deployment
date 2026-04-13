@@ -36,7 +36,7 @@ services:
       timeout: 5s
       retries: 10
   config-service:
-    image: ostock/config-server:0.0.1-SNAPSHOT
+    image: ostock/config-server:1.0.0-SNAPSHOT
     ports:
       - "8071:8071"
     networks:
