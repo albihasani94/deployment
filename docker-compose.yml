@@ -14,7 +14,7 @@ services:
     networks:
       - organization
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
       interval: 15s
       timeout: 5s
       retries: 10
@@ -31,7 +31,7 @@ services:
     networks:
       - licensing
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
       interval: 15s
       timeout: 5s
       retries: 10
@@ -41,27 +41,21 @@ services:
       - "8071:8071"
     networks:
       - config
-  config-ready:
-    image: alpine:latest
-    depends_on:
-      config-service:
-        condition: service_started
-    command:
-      - /bin/sh
-      - -c
-      - >
-        until wget -qO- http://config-service:8071/actuator/health | grep -q '"status":"UP"'; do
-          sleep 1;
-        done
-    networks:
-      - config
+    environment:
+      THC_PATH: /actuator/health
+      THC_PORT: "8071"
+    healthcheck:
+      test: [ "CMD", "/workspace/health-check" ]
+      interval: 5s
+      timeout: 5s
+      retries: 12
   eurekaserver:
     image: ostock/eureka-server:0.0.1-SNAPSHOT
     ports:
       - "8070:8070"
     depends_on:
-      config-ready:
-        condition: service_completed_successfully
+      config-service:
+        condition: service_healthy
     networks:
       - config
       - eureka
@@ -70,8 +64,8 @@ services:
   organization-service:
     image: ostock/organization-service:0.0.1-SNAPSHOT
     depends_on:
-      config-ready:
-        condition: service_completed_successfully
+      config-service:
+        condition: service_healthy
       organization_db:
         condition: service_healthy
     ports:
@@ -85,8 +79,8 @@ services:
   licensing-service:
     image: ostock/licensing-service:0.0.1-SNAPSHOT
     depends_on:
-      config-ready:
-        condition: service_completed_successfully
+      config-service:
+        condition: service_healthy
       licensing_db:
         condition: service_healthy
     ports:
