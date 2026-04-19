@@ -44,7 +44,7 @@ services:
       - POSTGRES_DB=keycloak
       - POSTGRES_PASSWORD=keycloak
     volumes:
-      - keycloak_data:/var/lib/postgresql/data
+      - keycloak_data:/var/lib/postgresql
     networks:
       - keycloak
     healthcheck:

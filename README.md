@@ -22,6 +22,14 @@ The Eureka, Organization Service, and Licensing Service containers run with the 
 
 Keycloak runs in development mode at `http://localhost:8082` with the bootstrap admin account `admin` / `admin`. Other containers on the Compose network can reach it at `http://keycloak:8080`.
 
+To start only Keycloak and its PostgreSQL database, use the standalone Compose file:
+
+```sh
+docker compose -f docker-compose.keycloak.yml up
+```
+
+The standalone file reuses the same `deployment_keycloak_data` Docker volume as the full stack, so realms, clients, users, and client secrets are shared between both run modes.
+
 The gateway is exposed at `http://localhost:8072`. Example gateway URLs:
 
 ```text
