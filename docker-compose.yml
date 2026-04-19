@@ -92,6 +92,24 @@ services:
       - organization
     environment:
       spring.profiles.active: "docker"
+  gateway:
+    image: ostock/gateway:0.0.1-SNAPSHOT
+    depends_on:
+      config-service:
+        condition: service_healthy
+      eurekaserver:
+        condition: service_started
+      organization-service:
+        condition: service_started
+      licensing-service:
+        condition: service_started
+    ports:
+      - "8072:8072"
+    networks:
+      - config
+      - eureka
+    environment:
+      spring.profiles.active: "docker"
 
 networks:
   config:

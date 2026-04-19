@@ -3,11 +3,11 @@
 ![services](services.png)
 
 ## Overview
-The `deployment` directory packages a Docker Compose stack that wires together the Config Server, Eureka, and service containers with their supporting PostgreSQL instances. Use it when you need the full microservices suite running locally.
+The `deployment` directory packages a Docker Compose stack that wires together the Config Server, Eureka, Gateway, and service containers with their supporting PostgreSQL instances. Use it when you need the full microservices suite running locally.
 
 ## Prerequisites
 - Docker
-- The `ostock/*` images available locally or pulled from a registry (`config-server`, `eureka-server`, `organization-service`, `licensing-service`).
+- The `ostock/*` images available locally or pulled from a registry (`config-server`, `eureka-server`, `gateway`, `organization-service`, `licensing-service`).
 
 ## Run The Stack
 From this repository execute:
@@ -18,7 +18,14 @@ docker compose up
 
 This command starts the two PostgreSQL containers, waits for the Config Server health check to pass, and then launches the dependent services.
 
-The Eureka, Organization Service, and Licensing Service containers run with the `docker` profile enabled, so they load the network-aware configuration served by the Config Server. If you override that locally, keep the profile set to `docker`.
+The Eureka, Organization Service, and Licensing Service containers run with the `docker` profile enabled, so they load the network-aware configuration served by the Config Server. The Gateway also runs with the `docker` profile enabled, and its deployment-specific port, Eureka URL, and routes are set directly in `docker-compose.yml`.
+
+The gateway is exposed at `http://localhost:8072`. Example gateway URLs:
+
+```text
+http://localhost:8072/organization-service/v1/organization/{organizationId}
+http://localhost:8072/licensing-service/v1/organization/{organizationId}/license/{licenseId}
+```
 
 ## Tear Down
 
