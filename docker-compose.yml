@@ -86,10 +86,9 @@ services:
     ports:
       - "8080:8080"
     networks:
+      - licensing
       - config
       - eureka
-      - licensing
-      - organization
     environment:
       spring.profiles.active: "docker"
   gateway:
