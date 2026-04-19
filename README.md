@@ -3,7 +3,7 @@
 ![services](services.png)
 
 ## Overview
-The `deployment` directory packages a Docker Compose stack that wires together the Config Server, Eureka, Gateway, and service containers with their supporting PostgreSQL instances. Use it when you need the full microservices suite running locally.
+The `deployment` directory packages a Docker Compose stack that wires together the Config Server, Eureka, Gateway, Keycloak, and service containers with their supporting PostgreSQL instances. Use it when you need the full microservices suite running locally.
 
 ## Prerequisites
 - Docker
@@ -16,9 +16,11 @@ From this repository execute:
 docker compose up
 ```
 
-This command starts the two PostgreSQL containers, waits for the Config Server health check to pass, and then launches the dependent services.
+This command starts the PostgreSQL containers, waits for the Config Server health check to pass, and then launches the dependent services.
 
 The Eureka, Organization Service, and Licensing Service containers run with the `docker` profile enabled, so they load the network-aware configuration served by the Config Server. The Gateway also runs with the `docker` profile enabled, and its deployment-specific port, Eureka URL, and routes are set directly in `docker-compose.yml`.
+
+Keycloak runs in development mode at `http://localhost:8082` with the bootstrap admin account `admin` / `admin`. Other containers on the Compose network can reach it at `http://keycloak:8080`.
 
 The gateway is exposed at `http://localhost:8072`. Example gateway URLs:
 
