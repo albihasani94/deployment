@@ -44,4 +44,5 @@ networks:
 
 volumes:
   keycloak_data:
+    external: true
     name: deployment_keycloak_data
