@@ -3,6 +3,10 @@ name: deployment-keycloak
 services:
   keycloak_db:
     image: postgres:18-alpine
+    deploy:
+      resources:
+        limits:
+          memory: 256M
     ports:
       - "35432:5432"
     environment:
@@ -21,6 +25,10 @@ services:
 
   keycloak:
     image: quay.io/keycloak/keycloak:26.6.1
+    deploy:
+      resources:
+        limits:
+          memory: 512M
     command: start-dev
     depends_on:
       keycloak_db:
