@@ -154,12 +154,15 @@ services:
         condition: service_healthy
       licensing_db:
         condition: service_healthy
+      keycloak:
+        condition: service_started
     ports:
       - "8080:8080"
     networks:
       - licensing
       - config
       - eureka
+      - keycloak
     environment:
       spring.profiles.active: "docker"
   gateway:
