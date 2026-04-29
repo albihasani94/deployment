@@ -87,6 +87,34 @@ services:
       KC_DB_PASSWORD: keycloak
       KC_HEALTH_ENABLED: "true"
       KC_METRICS_ENABLED: "true"
+  kafka:
+    image: apache/kafka:4.1.2
+    deploy:
+      resources:
+        limits:
+          memory: 768M
+    ports:
+      - "29092:29092"
+    networks:
+      - kafka
+    environment:
+      KAFKA_NODE_ID: "1"
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: "1"
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: "1"
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: "1"
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: "0"
+    healthcheck:
+      test: [ "CMD-SHELL", "/opt/kafka/bin/kafka-broker-api-versions.sh --bootstrap-server localhost:9092" ]
+      interval: 10s
+      timeout: 10s
+      retries: 12
   config-service:
     image: ostock/config-server:1.0.0-SNAPSHOT
     deploy:
@@ -134,6 +162,8 @@ services:
         condition: service_healthy
       keycloak:
         condition: service_started
+      kafka:
+        condition: service_healthy
     ports:
       - "8081:8081"
     networks:
@@ -141,6 +171,7 @@ services:
       - config
       - eureka
       - keycloak
+      - kafka
     environment:
       spring.profiles.active: "docker"
   licensing-service:
@@ -156,6 +187,8 @@ services:
         condition: service_healthy
       keycloak:
         condition: service_started
+      kafka:
+        condition: service_healthy
     ports:
       - "8080:8080"
     networks:
@@ -163,6 +196,7 @@ services:
       - config
       - eureka
       - keycloak
+      - kafka
     environment:
       spring.profiles.active: "docker"
   gateway:
@@ -194,6 +228,7 @@ networks:
   organization:
   licensing:
   keycloak:
+  kafka:
 
 volumes:
   keycloak_data:
