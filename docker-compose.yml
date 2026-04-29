@@ -115,6 +115,21 @@ services:
       interval: 10s
       timeout: 10s
       retries: 12
+  redis:
+    image: redis:8.6.2-alpine
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+    ports:
+      - "6379:6379"
+    networks:
+      - redis
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 5s
+      timeout: 3s
+      retries: 10
   config-service:
     image: ostock/config-server:1.0.0-SNAPSHOT
     deploy:
@@ -189,6 +204,8 @@ services:
         condition: service_started
       kafka:
         condition: service_healthy
+      redis:
+        condition: service_healthy
     ports:
       - "8080:8080"
     networks:
@@ -197,6 +214,7 @@ services:
       - eureka
       - keycloak
       - kafka
+      - redis
     environment:
       spring.profiles.active: "docker"
   gateway:
@@ -229,6 +247,7 @@ networks:
   licensing:
   keycloak:
   kafka:
+  redis:
 
 volumes:
   keycloak_data:

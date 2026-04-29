@@ -3,7 +3,7 @@
 ![services](services.png)
 
 ## Overview
-The `deployment` directory packages a Docker Compose stack that wires together the Config Server, Eureka, Gateway, Keycloak, Kafka, and service containers with their supporting PostgreSQL instances. Use it when you need the full microservices suite running locally.
+The `deployment` directory packages a Docker Compose stack that wires together the Config Server, Eureka, Gateway, Keycloak, Kafka, Redis, and service containers with their supporting PostgreSQL instances. Use it when you need the full microservices suite running locally.
 
 ## Prerequisites
 - Docker
@@ -24,6 +24,8 @@ Keycloak runs in development mode at `http://localhost:8082` with the bootstrap 
 
 Kafka runs as a single-node broker for local development. It is available to the Organization and Licensing service containers at `kafka:9092`. Host tools can connect at `localhost:29092`.
 
+Redis runs for local development at `localhost:6379`. The Licensing Service container reaches it at `redis:6379` through `SPRING_DATA_REDIS_HOST` and `SPRING_DATA_REDIS_PORT`.
+
 To start only Keycloak and its PostgreSQL database, use the standalone Compose file:
 
 ```sh
@@ -39,6 +41,14 @@ docker compose -f docker-compose.kafka.yml up
 ```
 
 The standalone Kafka broker uses the same local endpoints as the full stack: `kafka:9092` for containers on its Compose network and `localhost:29092` for host tools.
+
+To start only Redis, use the standalone Compose file:
+
+```sh
+docker compose -f docker-compose.redis.yml up
+```
+
+The standalone Redis container uses the same local endpoint as the full stack: `localhost:6379`.
 
 The gateway is exposed at `http://localhost:8072`. Example gateway URLs:
 
