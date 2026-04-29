@@ -22,7 +22,7 @@ The Eureka, Organization Service, and Licensing Service containers run with the 
 
 Keycloak runs in development mode at `http://localhost:8082` with the bootstrap admin account `admin` / `admin`. Other containers on the Compose network can reach it at `http://keycloak:8080`.
 
-Kafka runs as a single-node broker for local development. It is available to the Organization and Licensing service containers at `kafka:9092` through `SPRING_KAFKA_BOOTSTRAP_SERVERS`; no host port is published by default.
+Kafka runs as a single-node broker for local development. It is available to the Organization and Licensing service containers at `kafka:9092`. Host tools can connect at `localhost:29092`.
 
 To start only Keycloak and its PostgreSQL database, use the standalone Compose file:
 
@@ -31,6 +31,14 @@ docker compose -f docker-compose.keycloak.yml up
 ```
 
 The standalone file reuses the same `deployment_keycloak_data` Docker volume as the full stack, so realms, clients, users, and client secrets are shared between both run modes.
+
+To start only Kafka, use the standalone Compose file:
+
+```sh
+docker compose -f docker-compose.kafka.yml up
+```
+
+The standalone Kafka broker uses the same local endpoints as the full stack: `kafka:9092` for containers on its Compose network and `localhost:29092` for host tools.
 
 The gateway is exposed at `http://localhost:8072`. Example gateway URLs:
 
