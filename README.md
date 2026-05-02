@@ -26,6 +26,14 @@ Kafka runs as a single-node broker for local development. It is available to the
 
 Redis runs for local development at `localhost:6379`. The Licensing Service container reaches it at `redis:6379` through `SPRING_DATA_REDIS_HOST` and `SPRING_DATA_REDIS_PORT`.
 
+To start the shared infrastructure needed by services launched from an IDE, use the local Compose file:
+
+```sh
+docker compose -f docker-compose.local.yml up
+```
+
+This starts Keycloak, Kafka, Redis, and Keycloak's PostgreSQL database without starting the application containers. IDE-launched services using the `dev` profile can connect to Keycloak at `http://localhost:8082`, Kafka at `localhost:29092`, and Redis at `localhost:6379`. The file reuses the same `deployment_keycloak_data` Docker volume as the full stack and standalone Keycloak file.
+
 To start only Keycloak and its PostgreSQL database, use the standalone Compose file:
 
 ```sh
