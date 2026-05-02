@@ -25,7 +25,7 @@ The Eureka, Organization Service, and Licensing Service containers run with the 
 
 Keycloak runs in development mode at `http://localhost:8082` with the bootstrap admin account `admin` / `admin`. Other containers on the Compose network can reach it at `http://keycloak:8080`.
 
-Kafka runs as a single-node broker for local development. It is available to the Organization and Licensing service containers at `kafka:9092`. Host tools can connect at `localhost:29092`.
+Kafka runs as a single-node broker for local development. It is available to the Organization and Licensing service containers at `kafka:9092`. Host tools can connect at `localhost:29092`. Kafbat UI is available at `http://localhost:8085` and connects to Kafka through the Compose network.
 
 Redis runs for local development at `localhost:6379`. The Licensing Service container reaches it at `redis:6379` through `SPRING_DATA_REDIS_HOST` and `SPRING_DATA_REDIS_PORT`.
 
@@ -35,7 +35,7 @@ To start the shared infrastructure needed by services launched from an IDE, use 
 docker compose -f docker-compose.local.yml up
 ```
 
-This starts Keycloak, Kafka, Redis, and Keycloak's PostgreSQL database without starting the application containers. IDE-launched services using the `dev` profile can connect to Keycloak at `http://localhost:8082`, Kafka at `localhost:29092`, and Redis at `localhost:6379`. The file reuses the same `deployment_keycloak_data` Docker volume as the full stack and standalone Keycloak file.
+This starts Keycloak, Kafka, Redis, Kafbat UI, and Keycloak's PostgreSQL database without starting the application containers. IDE-launched services using the `dev` profile can connect to Keycloak at `http://localhost:8082`, Kafka at `localhost:29092`, and Redis at `localhost:6379`. Kafbat UI is available at `http://localhost:8085`. The file reuses the same `deployment_keycloak_data` Docker volume as the full stack and standalone Keycloak file.
 
 To start only Keycloak and its PostgreSQL database, use the standalone Compose file:
 
