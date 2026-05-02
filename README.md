@@ -3,13 +3,16 @@
 ![services](services.png)
 
 ## Overview
+
 The `deployment` directory packages a Docker Compose stack that wires together the Config Server, Eureka, Gateway, Keycloak, Kafka, Redis, and service containers with their supporting PostgreSQL instances. Use it when you need the full microservices suite running locally.
 
 ## Prerequisites
+
 - Docker
 - The `ostock/*` images available locally or pulled from a registry (`config-server`, `eureka-server`, `gateway`, `organization-service`, `licensing-service`).
 
 ## Run The Stack
+
 From this repository execute:
 
 ```sh
@@ -72,5 +75,6 @@ docker compose down
 ```
 
 ## Troubleshooting
+
 - If a service exits immediately, inspect its logs with `docker compose logs <service>`.
 - Seeing Eureka retry `http://localhost:8761/eureka` usually means the docker profile is not active. Rebuild the images and confirm `spring.profiles.active=docker` is present on the affected containers.
