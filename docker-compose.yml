@@ -173,7 +173,7 @@ services:
       timeout: 5s
       retries: 12
   eurekaserver:
-    image: ostock/eureka-server:0.0.1-SNAPSHOT
+    image: ostock/eureka-server:1.0.0-SNAPSHOT
     deploy:
       resources:
         limits:
