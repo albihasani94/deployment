@@ -285,6 +285,7 @@ services:
     environment:
       THC_PATH: /actuator/health
       THC_PORT: "8071"
+      spring.profiles.active: "docker"
     healthcheck:
       test: ["CMD", "/workspace/health-check"]
       interval: 5s
