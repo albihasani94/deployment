@@ -130,6 +130,71 @@ services:
     networks:
       - observability
 
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:9.4.1
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+    ports:
+      - "9200:9200"
+    environment:
+      discovery.type: single-node
+      xpack.security.enabled: "false"
+      xpack.license.self_generated.type: basic
+      ES_JAVA_OPTS: "-Xms512m -Xmx512m"
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+    networks:
+      - observability
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "curl -fsS http://localhost:9200/_cluster/health?wait_for_status=yellow&timeout=1s || exit 1",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:9.4.1
+    deploy:
+      resources:
+        limits:
+          memory: 768M
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    ports:
+      - "5000:5000"
+      - "9600:9600"
+    environment:
+      LS_JAVA_OPTS: "-Xms384m -Xmx384m"
+      XPACK_MONITORING_ENABLED: "false"
+    volumes:
+      - ./compose/logstash/pipeline/:/usr/share/logstash/pipeline/:ro
+    networks:
+      - observability
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:9.4.1
+    deploy:
+      resources:
+        limits:
+          memory: 768M
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    ports:
+      - "5601:5601"
+    environment:
+      ELASTICSEARCH_HOSTS: http://elasticsearch:9200
+      NODE_OPTIONS: "--max-old-space-size=768"
+      XPACK_SECURITY_ENABLED: "false"
+    networks:
+      - observability
+
 networks:
   keycloak:
   kafka:
@@ -141,3 +206,5 @@ volumes:
     name: deployment_keycloak_data
   kafka_data:
     name: deployment_kafka_broker_data
+  elasticsearch_data:
+    name: deployment_elasticsearch_data
