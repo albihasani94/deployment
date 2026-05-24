@@ -1,0 +1,27 @@
+info:
+  name: user auth
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: http://localhost:8082/realms/spring-microservices/protocol/openid-connect/token
+  body:
+    type: form-urlencoded
+    data:
+      - name: grant_type
+        value: password
+      - name: client_id
+        value: ostock
+      - name: client_secret
+        value: 1mderCQBoJq3jsmrB7zyQ4ZTrULioZQk
+      - name: username
+        value: user@ostock.com
+      - name: password
+        value: password
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

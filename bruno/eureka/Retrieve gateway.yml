@@ -1,0 +1,50 @@
+info:
+  name: Retrieve gateway
+  type: http
+  seq: 4
+
+http:
+  method: GET
+  url: http://localhost:8070/eureka/apps/gateway
+  headers:
+    - name: Accept
+      value: application/json
+    - name: User-Agent
+      value: insomnia/10.1.1
+  body:
+    type: text
+    data: ""
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: false
+  maxRedirects: 5
+
+docs: |
+  Imported from HAR file 'Insomnia_2025-09-28.har'
+  Created by Insomnia REST Client insomnia.desktop.app:v11.6.1
+
+  Infos about the HAR entry:
+
+  ## Timings
+
+  Send HTTP request: 0 ms
+  Wait HTTP response: 6.3 ms
+  Receive HTTP response: 0 ms
+
+  ## Response
+
+  ### Headers
+
+  ```
+  HTTP/1.1 200 
+  Content-Type: application/json
+  Content-Length: 1041
+  Date: Sun, 08 Dec 2024 21:25:05 GMT
+  ```
+
+  ### Body
+
+  {"application":{"name":"ORGANIZATION-SERVICE","instance":[{"instanceId":"192.168.1.223:organization-service:8081","hostName":"192.168.1.223","app":"ORGANIZATION-SERVICE","ipAddr":"192.168.1.223","status":"UP","overriddenStatus":"UNKNOWN","port":{"$":8081,"@enabled":"true"},"securePort":{"$":443,"@enabled":"false"},"countryId":1,"dataCenterInfo":{"@class":"com.netflix.appinfo.InstanceInfo$DefaultDataCenterInfo","name":"MyOwn"},"leaseInfo":{"renewalIntervalInSecs":30,"durationInSecs":90,"registrationTimestamp":1733693085578,"lastRenewalTimestamp":1733693085578,"evictionTimestamp":0,"serviceUpTimestamp":1733693085578},"metadata":{"management.port":"8081"},"homePageUrl":"http://192.168.1.223:8081/","statusPageUrl":"http://192.168.1.223:8081/actuator/info","healthCheckUrl":"http://192.168.1.223:8081/actuator/health","vipAddress":"organization-service","secureVipAddress":"organization-service","isCoordinatingDiscoveryServer":"false","lastUpdatedTimestamp":"1733693085578","lastDirtyTimestamp":"1733693085564","actionType":"ADDED"}]}}

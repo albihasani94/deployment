@@ -1,0 +1,50 @@
+info:
+  name: Delete License
+  type: http
+  seq: 4
+
+http:
+  method: DELETE
+  url: http://localhost:8080/v1/organization/optimaGrowth/license/1
+  headers:
+    - name: User-Agent
+      value: insomnia/10.1.1
+  body:
+    type: text
+    data: ""
+  auth:
+    type: bearer
+    token: eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJROUJ5VkNtVEgwemd0c2xfWTNxSUk5TXhkVS1OTk9kV2NwQ0E5Tm1xUnlBIn0.eyJleHAiOjE3NzcyMzA0MzgsImlhdCI6MTc3NzIzMDEzOCwianRpIjoib25ydHJvOjEzZTMxOGI0LWM0YzktNzllYi1hNWRhLTczMjEyZTY2M2FmNSIsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODA4Mi9yZWFsbXMvc3ByaW5nLW1pY3Jvc2VydmljZXMiLCJhdWQiOiJhY2NvdW50Iiwic3ViIjoiNGQyZDBkZDItYjFiZS00MmQ5LWJhNmUtYjVjYWMzZjdiZDIwIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoib3N0b2NrIiwic2lkIjoiR3JCZlJHVi1rbVJUWGNqbTZ6TzVHeWU1IiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6WyIqIl0sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIiwib3N0b2NrLWFkbWluIiwiZGVmYXVsdC1yb2xlcy1zcHJpbmctbWljcm9zZXJ2aWNlcyJdfSwicmVzb3VyY2VfYWNjZXNzIjp7Im9zdG9jayI6eyJyb2xlcyI6WyJhZG1pbiJdfSwiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsInJvbGVzIjpbImFkbWluIiwibWFuYWdlLWFjY291bnQiLCJtYW5hZ2UtYWNjb3VudC1saW5rcyIsInZpZXctcHJvZmlsZSJdLCJuYW1lIjoiYWRtaW4gYWRtaW4iLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJhZG1pbkBvc3RvY2suY29tIiwiZ2l2ZW5fbmFtZSI6ImFkbWluIiwiZmFtaWx5X25hbWUiOiJhZG1pbiIsImVtYWlsIjoiYWRtaW5Ab3N0b2NrLmNvbSJ9.t_P_BNELcpdJDhhlggBQKWs-aC3tfIO2cnFRFLfgzKIF_Oj45Ikd2k9B44pJ-KJGsGzdMPeplbX1DTWlB0zE2EpUNjXg8zxGWv7RYt-ZCD0XmFXcWZbhMZXLdHa67FLSbi-qkuBlGndK2ZvXEvTIE3i--tQj8r8ZdjgBXNoQYoFqGDXXkgT21QC_ZkLNOijCTMzRMx1EPqBWJQCxEHEI6ig7-h0d9vMxXNxqbORFVtyJaq9U6AJ_A7mp32mpz8ruzai6i156HX3rUfxvo0dlel_qafqKX4lKdrDHVRcrSQf3kK9ojUI3QDwwj43c3gZzzVodzZvCA6oHcGsivv9bfg
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: false
+  maxRedirects: 5
+
+docs: |
+  Imported from HAR file 'Insomnia_2025-09-28.har'
+  Created by Insomnia REST Client insomnia.desktop.app:v11.6.1
+
+  Infos about the HAR entry:
+
+  ## Timings
+
+  Send HTTP request: 0 ms
+  Wait HTTP response: 27 ms
+  Receive HTTP response: 0 ms
+
+  ## Response
+
+  ### Headers
+
+  ```
+  HTTP/1.1 200 
+  Content-Type: text/plain;charset=UTF-8
+  Content-Length: 26
+  Date: Tue, 19 Nov 2024 21:17:37 GMT
+  ```
+
+  ### Body
+
+  Deleting license with id 2

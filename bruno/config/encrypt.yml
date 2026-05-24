@@ -1,0 +1,50 @@
+info:
+  name: encrypt
+  type: http
+  seq: 7
+
+http:
+  method: POST
+  url: http://localhost:8071/encrypt
+  headers:
+    - name: Content-Type
+      value: text/plain
+    - name: User-Agent
+      value: insomnia/10.1.1
+  body:
+    type: text
+    data: test
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: false
+  maxRedirects: 5
+
+docs: |
+  Imported from HAR file 'Insomnia_2025-09-28.har'
+  Created by Insomnia REST Client insomnia.desktop.app:v11.6.1
+
+  Infos about the HAR entry:
+
+  ## Timings
+
+  Send HTTP request: 0 ms
+  Wait HTTP response: 3.8 ms
+  Receive HTTP response: 0 ms
+
+  ## Response
+
+  ### Headers
+
+  ```
+  HTTP/1.1 200 
+  Content-Type: text/plain;charset=UTF-8
+  Content-Length: 64
+  Date: Tue, 19 Nov 2024 22:50:37 GMT
+  ```
+
+  ### Body
+
+  faa926ee5bcc9b867619f614f95f4e5f2f915d7ef3df579b78a7f9c36b2fa056

@@ -1,0 +1,91 @@
+info:
+  name: Retrieve apps
+  type: http
+  seq: 1
+
+http:
+  method: GET
+  url: http://localhost:8070/eureka/apps
+  headers:
+    - name: User-Agent
+      value: insomnia/10.1.1
+      disabled: true
+    - name: Accept
+      value: application/json
+  body:
+    type: text
+    data: ""
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: false
+  maxRedirects: 5
+
+docs: |
+  Imported from HAR file 'Insomnia_2025-09-28.har'
+  Created by Insomnia REST Client insomnia.desktop.app:v11.6.1
+
+  Infos about the HAR entry:
+
+  ## Timings
+
+  Send HTTP request: 0 ms
+  Wait HTTP response: 15 ms
+  Receive HTTP response: 0 ms
+
+  ## Response
+
+  ### Headers
+
+  ```
+  HTTP/1.1 200 
+  Content-Type: application/xml
+  Content-Length: 1756
+  Date: Sun, 08 Dec 2024 20:37:19 GMT
+  ```
+
+  ### Body
+
+  <applications>
+    <versions__delta>1</versions__delta>
+    <apps__hashcode>UP_1_</apps__hashcode>
+    <application>
+      <name>LICENSING-SERVICE</name>
+      <instance>
+        <instanceId>192.168.1.223:licensing-service</instanceId>
+        <hostName>192.168.1.223</hostName>
+        <app>LICENSING-SERVICE</app>
+        <ipAddr>192.168.1.223</ipAddr>
+        <status>UP</status>
+        <overriddenstatus>UNKNOWN</overriddenstatus>
+        <port enabled="true">8080</port>
+        <securePort enabled="false">443</securePort>
+        <countryId>1</countryId>
+        <dataCenterInfo class="com.netflix.appinfo.InstanceInfo$DefaultDataCenterInfo">
+          <name>MyOwn</name>
+        </dataCenterInfo>
+        <leaseInfo>
+          <renewalIntervalInSecs>30</renewalIntervalInSecs>
+          <durationInSecs>90</durationInSecs>
+          <registrationTimestamp>1733690167185</registrationTimestamp>
+          <lastRenewalTimestamp>1733690317208</lastRenewalTimestamp>
+          <evictionTimestamp>0</evictionTimestamp>
+          <serviceUpTimestamp>1733690167185</serviceUpTimestamp>
+        </leaseInfo>
+        <metadata>
+          <management.port>8080</management.port>
+        </metadata>
+        <homePageUrl>http://192.168.1.223:8080/</homePageUrl>
+        <statusPageUrl>http://192.168.1.223:8080/actuator/info</statusPageUrl>
+        <healthCheckUrl>http://192.168.1.223:8080/actuator/health</healthCheckUrl>
+        <vipAddress>licensing-service</vipAddress>
+        <secureVipAddress>licensing-service</secureVipAddress>
+        <isCoordinatingDiscoveryServer>false</isCoordinatingDiscoveryServer>
+        <lastUpdatedTimestamp>1733690167185</lastUpdatedTimestamp>
+        <lastDirtyTimestamp>1733690167158</lastDirtyTimestamp>
+        <actionType>ADDED</actionType>
+      </instance>
+    </application>
+  </applications>

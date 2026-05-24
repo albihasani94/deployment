@@ -1,0 +1,50 @@
+info:
+  name: Retrieve License
+  type: http
+  seq: 1
+
+http:
+  method: GET
+  url: http://localhost:8080/v1/organization/optimaGrowth/license/1
+  headers:
+    - name: User-Agent
+      value: insomnia/10.1.1
+  body:
+    type: text
+    data: ""
+  auth:
+    type: bearer
+    token: eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJROUJ5VkNtVEgwemd0c2xfWTNxSUk5TXhkVS1OTk9kV2NwQ0E5Tm1xUnlBIn0.eyJleHAiOjE3Nzc4MzUxMDksImlhdCI6MTc3NzgzNDgwOSwianRpIjoib25ydHJvOjkyYTEyOTFjLTA2YTctNGNhMS1kYTg5LTMyYTc2NWQxMTU0ZSIsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODA4Mi9yZWFsbXMvc3ByaW5nLW1pY3Jvc2VydmljZXMiLCJhdWQiOiJhY2NvdW50Iiwic3ViIjoiNGQyZDBkZDItYjFiZS00MmQ5LWJhNmUtYjVjYWMzZjdiZDIwIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoib3N0b2NrIiwic2lkIjoiMjQzVk5TLVNRSXpUVzFVME1MYTlCaFNVIiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6WyIqIl0sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIiwib3N0b2NrLWFkbWluIiwiZGVmYXVsdC1yb2xlcy1zcHJpbmctbWljcm9zZXJ2aWNlcyJdfSwicmVzb3VyY2VfYWNjZXNzIjp7Im9zdG9jayI6eyJyb2xlcyI6WyJhZG1pbiJdfSwiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsInJvbGVzIjpbImFkbWluIiwibWFuYWdlLWFjY291bnQiLCJtYW5hZ2UtYWNjb3VudC1saW5rcyIsInZpZXctcHJvZmlsZSJdLCJuYW1lIjoiYWRtaW4gYWRtaW4iLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJhZG1pbkBvc3RvY2suY29tIiwiZ2l2ZW5fbmFtZSI6ImFkbWluIiwiZmFtaWx5X25hbWUiOiJhZG1pbiIsImVtYWlsIjoiYWRtaW5Ab3N0b2NrLmNvbSJ9.SdSaaKzzoRN6wFVtVjywiUeR0t0re7azHz35-bLKR_TcYc2pHxYC-G6BfXhCCzpf0WeqaLZyea-uHTjh6sHd0VOk57ZiIutkLlRWzD5pU7WcLNHEXiclNdtiL64bFnKkGej9YyybFFx2hxjtSW8OmodvVLp0m9p67LH7_QpyfM6x5Z8jQD-4Yn2s6xl681q-joikPrZTA3rZaavPrwNs4inMDZhkAZpVHfbNDzuhXsWSCipy-NY2M9qRDCPznBKIrj-zwo4KtCirH40Ma5B4W8ee27Q2GAnVSJBTrxQlhe06t41FfJjugpstwojEpVRS7I54i_mIcArI5M6RUZ7EjQ
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: false
+  maxRedirects: 5
+
+docs: |
+  Imported from HAR file 'Insomnia_2025-09-28.har'
+  Created by Insomnia REST Client insomnia.desktop.app:v11.6.1
+
+  Infos about the HAR entry:
+
+  ## Timings
+
+  Send HTTP request: 0 ms
+  Wait HTTP response: 14.6 ms
+  Receive HTTP response: 0 ms
+
+  ## Response
+
+  ### Headers
+
+  ```
+  HTTP/1.1 200 
+  Content-Type: application/hal+json
+  Transfer-Encoding: chunked
+  Date: Mon, 16 Dec 2024 16:54:14 GMT
+  ```
+
+  ### Body
+
+  {"licenseId":1,"description":"Software Product","organizationId":2,"productName":"Ostock","licenseType":"complete","comment":"I AM DEV","_links":{"self":{"href":"http://localhost:8080/v1/organization/{organizationId}/license/1","templated":true},"createLicense":{"href":"http://localhost:8080/v1/organization/{organizationId}/license","templated":true},"updateLicense":{"href":"http://localhost:8080/v1/organization/{organizationId}/license","templated":true},"deleteLicense":{"href":"http://localhost:8080/v1/organization/{organizationId}/license/1","templated":true}}}

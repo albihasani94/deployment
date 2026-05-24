@@ -1,0 +1,48 @@
+info:
+  name: Licensing > dev,docker
+  type: http
+  seq: 3
+
+http:
+  method: GET
+  url: http://localhost:8071/licensing-service/dev,docker
+  headers:
+    - name: User-Agent
+      value: insomnia/10.1.1
+  body:
+    type: text
+    data: ""
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: false
+  maxRedirects: 5
+
+docs: |
+  Imported from HAR file 'Insomnia_2025-09-28.har'
+  Created by Insomnia REST Client insomnia.desktop.app:v11.6.1
+
+  Infos about the HAR entry:
+
+  ## Timings
+
+  Send HTTP request: 0 ms
+  Wait HTTP response: 13.3 ms
+  Receive HTTP response: 0 ms
+
+  ## Response
+
+  ### Headers
+
+  ```
+  HTTP/1.1 200 
+  Content-Type: application/json
+  Transfer-Encoding: chunked
+  Date: Sat, 30 Nov 2024 17:40:19 GMT
+  ```
+
+  ### Body
+
+  {"name":"licensing-service","profiles":["dev,docker"],"label":null,"version":null,"state":null,"propertySources":[{"name":"classpath:/config/licensing-service-docker.properties","source":{"example.property":"I AM DOCKER","spring.datasource.url":"jdbc:postgresql://database:5432/ostock_dev"}},{"name":"classpath:/config/licensing-service-dev.properties","source":{"example.property":"I AM DEV","spring.datasource.url":"jdbc:postgresql://database:15432/ostock_dev","spring.datasource.username":"postgres","spring.datasource.password":"postgres"}},{"name":"classpath:/config/licensing-service.properties","source":{"example.property":"I AM THE DEFAULT","spring.jpa.hibernate.ddl-auto":"none","spring.jpa.database":"POSTGRESQL","spring.datasource.platform":"postgres","spring.jpa.show-sql":"true","spring.jpa.hibernate.naming-strategy":"org.hibernate.cfg.ImprovedNamingStrategy","spring.jpa.properties.hibernate.dialect":"org.hibernate.dialect.PostgreSQLDialect","spring.database.driverClassName":"org.postgresql.Driver","spring.datasource.testWhileIdle":"true","spring.datasource.validationQuery":"SELECT 1","management.endpoints.web.exposure.include":"*","management.endpoints.enabled-by-default":"true"}}]}

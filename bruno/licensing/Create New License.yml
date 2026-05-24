@@ -1,0 +1,56 @@
+info:
+  name: Create New License
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: http://localhost:8080/v1/organization/optimaGrowth/license
+  headers:
+    - name: Content-Type
+      value: application/json
+    - name: User-Agent
+      value: insomnia/10.1.1
+  body:
+    type: json
+    data: |-
+      {
+        "productName": "OStock",
+        "licenseType": "full",
+        "description": "Software product",
+        "organizationId": "1"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: false
+  maxRedirects: 5
+
+docs: |
+  Imported from HAR file 'Insomnia_2025-09-28.har'
+  Created by Insomnia REST Client insomnia.desktop.app:v11.6.1
+
+  Infos about the HAR entry:
+
+  ## Timings
+
+  Send HTTP request: 0 ms
+  Wait HTTP response: 31.4 ms
+  Receive HTTP response: 0 ms
+
+  ## Response
+
+  ### Headers
+
+  ```
+  HTTP/1.1 200 
+  Content-Type: application/hal+json
+  Transfer-Encoding: chunked
+  Date: Tue, 19 Nov 2024 21:19:20 GMT
+  ```
+
+  ### Body
+
+  {"licenseId":3,"description":"Software product","organizationId":1,"productName":"OStock","licenseType":"full","comment":"I AM DEV"}
