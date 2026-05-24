@@ -239,7 +239,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 128M
+          memory: 256M
     depends_on:
       logstash:
         condition: service_started
@@ -273,7 +273,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 768M
+          memory: 1G
     depends_on:
       fluent-bit:
         condition: service_started
@@ -297,7 +297,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 768M
+          memory: 1G
     ports:
       - "8070:8070"
     depends_on:
@@ -384,7 +384,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 768M
+          memory: 1G
     depends_on:
       config-service:
         condition: service_healthy
@@ -406,6 +406,18 @@ services:
       - observability
     environment:
       spring.profiles.active: "docker"
+  prometheus:
+    image: prom/prometheus:v3.11.3
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./compose/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    networks:
+      - observability
 
 networks:
   config:
