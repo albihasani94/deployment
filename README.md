@@ -31,6 +31,8 @@ Jaeger runs with in-memory trace storage at `http://localhost:16686`. Spring Boo
 
 Prometheus runs at `http://localhost:9090`. In the full stack, Prometheus scrapes the Licensing Service at `licensing-service:8080/actuator/prometheus`. Metrics are pulled by Prometheus; they are not pushed through Logstash or the OpenTelemetry Collector in this local setup.
 
+Grafana runs at `http://localhost:3000` with anonymous login enabled for local-development. Grafana is provisioned with Prometheus as its default data source and a `Spring Microservices / Licensing Service Metrics` dashboard.
+
 The Elastic stack runs with local-development security disabled. Kibana is available at `http://localhost:5601`, and Elasticsearch is available at `http://localhost:9200`. The full-stack Compose file forwards Config Server, Eureka, Gateway, Organization Service, and Licensing Service stdout and stderr logs to Fluent Bit with Docker's Fluentd-compatible logging driver. Fluent Bit parses Spring Boot ECS JSON log lines and forwards JSON Lines to Logstash at `logstash:5000`; Logstash indexes ECS events into daily `local-spring-logs-*` indices. Create a Kibana data view for `local-spring-logs-*` to browse aggregated logs.
 
 The default container logging path for Spring Boot containers using the Compose log aggregation settings is:
@@ -56,7 +58,7 @@ The metrics path is:
 ```text
 Spring Boot Actuator Prometheus endpoint
 -> Prometheus scrape
--> Prometheus UI
+-> Prometheus UI or Grafana dashboard
 ```
 
 The gateway is exposed at `http://localhost:8072`. Example gateway URLs:
@@ -80,7 +82,7 @@ To start the shared infrastructure needed by services launched from an IDE, use 
 docker compose -f docker-compose.local.yml up
 ```
 
-This starts Keycloak, Kafka, Redis, Kafbat UI, Jaeger, Elasticsearch, Logstash, Kibana, Prometheus, and Keycloak's PostgreSQL database without starting the application containers. IDE-launched services using the `dev` profile can connect to Keycloak at `http://localhost:8082`, Kafka at `localhost:29092`, and Redis at `localhost:6379`. Kafbat UI is available at `http://localhost:8085`, Jaeger is available at `http://localhost:16686`, Kibana is available at `http://localhost:5601`, Elasticsearch is available at `http://localhost:9200`, Logstash accepts JSON Lines at `localhost:5000`, and Prometheus is available at `http://localhost:9090`.
+This starts Keycloak, Kafka, Redis, Kafbat UI, Jaeger, Elasticsearch, Logstash, Kibana, Prometheus, Grafana, and Keycloak's PostgreSQL database without starting the application containers. IDE-launched services using the `dev` profile can connect to Keycloak at `http://localhost:8082`, Kafka at `localhost:29092`, and Redis at `localhost:6379`. Kafbat UI is available at `http://localhost:8085`, Jaeger is available at `http://localhost:16686`, Kibana is available at `http://localhost:5601`, Elasticsearch is available at `http://localhost:9200`, Logstash accepts JSON Lines at `localhost:5000`, Prometheus is available at `http://localhost:9090`, and Grafana is available at `http://localhost:3000`.
 
 The local infrastructure stack does not run the OpenTelemetry Collector or Fluent Bit. Jaeger accepts OTLP/gRPC traces directly at `localhost:4317` and OTLP/HTTP traces directly at `localhost:4318`. Host-launched applications are not captured from stdout by Docker; if you need their logs in Elasticsearch, send ECS JSON Lines to Logstash at `localhost:5000` or run a local log forwarder for the IDE process.
 
@@ -107,6 +109,8 @@ up{job="spring-boot-docker"}
 jvm_memory_used_bytes{job="spring-boot-docker"}
 http_server_requests_seconds_count{job="spring-boot-docker"}
 ```
+
+Open Grafana at `http://localhost:3000` and sign in with `admin` / `admin`. The `Spring Microservices / Licensing Service Metrics` dashboard is provisioned automatically. It uses Prometheus queries filtered by the `service="licensing-service"` label, and the scrape job selector lets you switch between `spring-boot-docker` and `spring-boot-dev` when both exist.
 
 For IDE-launched applications started with `docker-compose.local.yml`, use:
 

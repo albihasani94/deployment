@@ -418,6 +418,28 @@ services:
       - ./compose/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
     networks:
       - observability
+  grafana:
+    image: grafana/grafana:13.0.1
+    deploy:
+      resources:
+        limits:
+          memory: 384M
+    depends_on:
+      prometheus:
+        condition: service_started
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+      - GF_AUTH_DISABLE_LOGIN_FORM=true
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./compose/grafana/provisioning/datasources/:/etc/grafana/provisioning/datasources/:ro
+      - ./compose/grafana/provisioning/dashboards/:/etc/grafana/provisioning/dashboards/:ro
+      - ./compose/grafana/dashboards/:/var/lib/grafana/dashboards/
+    networks:
+      - observability
 
 networks:
   config:
@@ -436,3 +458,5 @@ volumes:
     name: deployment_kafka_broker_data
   elasticsearch_data:
     name: deployment_elasticsearch_data
+  grafana_data:
+    name: deployment_grafana_data
