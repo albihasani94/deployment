@@ -20,7 +20,7 @@ extensions:
       - node_modules
       - .git
 
-runtime:
+request:
   scripts:
     - type: before-request
       code: |-
