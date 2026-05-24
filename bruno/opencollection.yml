@@ -13,12 +13,6 @@ config:
         username: ""
         password: ""
       bypassProxy: ""
-bundled: false
-extensions:
-  bruno:
-    ignore:
-      - node_modules
-      - .git
 
 request:
   scripts:
@@ -27,3 +21,9 @@ request:
         if (req.getAuthMode() === "bearer" && (!bru.getVar("admin_token") || Date.now() >= Number(bru.getVar("admin_token_expires_at")))) {
           await bru.runRequest("keycloak/admin auth");
         }
+bundled: false
+extensions:
+  bruno:
+    ignore:
+      - node_modules
+      - .git
