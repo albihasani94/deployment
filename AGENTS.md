@@ -2,7 +2,7 @@
 
 Optimize for the simplest end-to-end container design, not only the smallest local Compose change.
 
-This directory is the local Docker Compose deployment for the microservices suite. Treat `docker-compose.yml` as the full-stack integration entry point and `docker-compose.keycloak.yml` as the standalone Keycloak entry point.
+This directory is the local Docker Compose deployment for the microservices suite. Treat `docker-compose.yml` as the full-stack integration entry point and `docker-compose.local.yml` as the local infrastructure entry point for IDE-launched services.
 
 Before adding custom container glue, check whether the same outcome can be achieved with:
 - existing Docker Compose features
@@ -25,9 +25,12 @@ When adding dependencies between services, prefer Compose health checks for infr
 Keep network membership intentional. Attach each service only to the networks it needs:
 - `config` for Config Server access
 - `eureka` for service discovery and Gateway routing
+- `kafka` for Kafka broker and Kafka UI access
+- `redis` for Redis cache access
 - `organization` for Organization Service database access
 - `licensing` for Licensing Service database access
 - `keycloak` for Keycloak and its database
+- `observability` for tracing, metrics, and log aggregation components
 
 ## Image Guidelines
 
@@ -37,7 +40,7 @@ Build service images from their owning service directories instead of adding bui
 
 Keep image names aligned with the service build metadata:
 - `ostock/config-server:1.0.0-SNAPSHOT`
-- `ostock/eureka-server:0.0.1-SNAPSHOT`
+- `ostock/eureka-server:1.0.0-SNAPSHOT`
 - `ostock/gateway:0.0.1-SNAPSHOT`
 - `ostock/organization-service:0.0.1-SNAPSHOT`
 - `ostock/licensing-service:0.0.1-SNAPSHOT`
@@ -54,9 +57,17 @@ Keep secrets in this local deployment obviously development-only. The checked-in
 
 The Organization and Licensing PostgreSQL containers initialize from `compose/organization/` and `compose/licensing/`. Keep SQL files deterministic and safe to rerun only in the context Docker's init directory supports: they run when the database data directory is first created.
 
-The Keycloak standalone and full-stack Compose files intentionally share the `deployment_keycloak_data` Docker volume. Preserve that unless changing the shared-local-state behavior is the goal.
+The full-stack and local infrastructure Compose files intentionally share the `deployment_keycloak_data`, `deployment_kafka_broker_data`, and `deployment_elasticsearch_data` Docker volumes. Preserve that unless changing the shared-local-state behavior is the goal.
 
 Before suggesting destructive cleanup commands such as removing volumes, be explicit about which data will be lost.
+
+## Observability Guidelines
+
+In the full stack, Spring Boot containers export traces to `otel-collector:4317`, and the OpenTelemetry Collector forwards traces to Jaeger. In the local infrastructure stack, there is no Collector container; host-launched applications export OTLP directly to Jaeger at `localhost:4317` or `localhost:4318`.
+
+In the full stack, Config Server, Eureka, Gateway, Organization Service, and Licensing Service use Docker's Fluentd-compatible logging driver to send stdout and stderr to Fluent Bit, which forwards ECS JSON events to Logstash. The local infrastructure stack does not run Fluent Bit; host-launched applications that need indexed logs should send ECS JSON Lines to Logstash at `localhost:5000` or use a local forwarder.
+
+Prometheus uses pull scraping for metrics. Keep metrics separate from tracing and logging unless a deliberate metrics pipeline is added.
 
 ## Bruno Guidelines
 
@@ -84,13 +95,13 @@ For Compose-only changes, prefer lightweight validation first:
 
 ```sh
 docker compose config
-docker compose -f docker-compose.keycloak.yml config
+docker compose -f docker-compose.local.yml config
 ```
 
 When runtime validation is needed, start the smallest relevant stack:
 
 ```sh
-docker compose -f docker-compose.keycloak.yml up
+docker compose -f docker-compose.local.yml up
 docker compose up
 ```
 
