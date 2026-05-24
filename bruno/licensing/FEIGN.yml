@@ -5,7 +5,7 @@ info:
 
 http:
   method: GET
-  url: http://localhost:8080/v1/organization/optimaGrowth/license/10/FEIGN
+  url: http://localhost:8080/v1/organization/optimaGrowth/license/1/FEIGN
   headers:
     - name: User-Agent
       value: insomnia/10.1.1
