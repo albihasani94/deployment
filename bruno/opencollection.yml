@@ -19,3 +19,11 @@ extensions:
     ignore:
       - node_modules
       - .git
+
+runtime:
+  scripts:
+    - type: before-request
+      code: |-
+        if (req.getAuthMode() === "bearer" && (!bru.getVar("admin_token") || Date.now() >= Number(bru.getVar("admin_token_expires_at")))) {
+          await bru.runRequest("keycloak/admin auth");
+        }

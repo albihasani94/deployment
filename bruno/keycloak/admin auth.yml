@@ -20,6 +20,13 @@ http:
       - name: password
         value: password
 
+runtime:
+  scripts:
+    - type: after-response
+      code: |-
+        bru.setVar("admin_token", res.body.access_token);
+        bru.setVar("admin_token_expires_at", Date.now() + (res.body.expires_in * 1000));
+
 settings:
   encodeUrl: true
   timeout: 0
