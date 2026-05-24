@@ -195,6 +195,19 @@ services:
     networks:
       - observability
 
+  prometheus:
+    image: prom/prometheus:v3.11.3
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./compose/prometheus/prometheus-local.yml:/etc/prometheus/prometheus.yml:ro
+    networks:
+      - observability
+
 networks:
   keycloak:
   kafka:
