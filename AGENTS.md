@@ -70,6 +70,10 @@ Keep requests grouped by the runtime boundary they exercise:
 
 When adding or changing requests, prefer reusable Bruno variables or environments for repeated base URLs, credentials, and bearer tokens. Do not add new long-lived copied JWTs unless the request is deliberately capturing a short-lived local example.
 
+For shared Bruno auth automation, keep collection-wide pre-request behavior in `bruno/opencollection.yml` under `request.scripts`, not `runtime.scripts`. Use request-level `runtime.scripts` for individual request response handling, such as the Keycloak admin auth request storing `admin_token` and `admin_token_expires_at`.
+
+Prefer one collection-level auth refresh script guarded by the request auth mode over duplicating the same pre-request script in multiple `folder.yml` files. Protected requests should reference the shared token with `token: "{{admin_token}}"` instead of checked-in JWT values.
+
 Keep checked-in credentials obviously local-development only. The Keycloak users, client secret, and database credentials in this deployment are not production secrets.
 
 For validation, start the smallest Compose stack that exposes the target service, get a fresh token from the Bruno `keycloak` requests when authentication is required, then run the relevant request through Bruno or repeat the same URL with `curl`.
