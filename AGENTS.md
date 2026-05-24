@@ -58,6 +58,22 @@ The Keycloak standalone and full-stack Compose files intentionally share the `de
 
 Before suggesting destructive cleanup commands such as removing volumes, be explicit about which data will be lost.
 
+## Bruno Guidelines
+
+The `bruno/` collection is a host-side API client for the local Compose deployment. Unlike container configuration, Bruno requests should use host-published URLs such as `http://localhost:8072`, `http://localhost:8082`, `http://localhost:8080`, `http://localhost:8081`, `http://localhost:8071`, and `http://localhost:8070`.
+
+Keep requests grouped by the runtime boundary they exercise:
+- `keycloak` for token and realm discovery calls
+- `gateway` for end-to-end calls through Spring Cloud Gateway
+- `licensing` and `organization` for direct service diagnostics
+- `config` and `eureka` for platform service checks
+
+When adding or changing requests, prefer reusable Bruno variables or environments for repeated base URLs, credentials, and bearer tokens. Do not add new long-lived copied JWTs unless the request is deliberately capturing a short-lived local example.
+
+Keep checked-in credentials obviously local-development only. The Keycloak users, client secret, and database credentials in this deployment are not production secrets.
+
+For validation, start the smallest Compose stack that exposes the target service, get a fresh token from the Bruno `keycloak` requests when authentication is required, then run the relevant request through Bruno or repeat the same URL with `curl`.
+
 ## Validation
 
 For Compose-only changes, prefer lightweight validation first:
