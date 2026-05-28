@@ -6,8 +6,7 @@ This folder owns the local Docker Compose deployment. Treat
 
 ## North Star
 
-- Prefer the simplest reproducible end-to-end deployment, not the smallest
-  local Compose diff.
+- Prefer minimal diffs that keep end-to-end deployment simple and reproducible.
 - Before adding scripts, sleeps, wrappers, or custom glue, try Compose features,
   Spring profile/configuration, owning-service image metadata, and the existing
   health-check/dependency patterns.
