@@ -96,7 +96,7 @@ services:
       KC_HEALTH_ENABLED: "true"
       KC_METRICS_ENABLED: "true"
   kafka:
-    image: apache/kafka:4.1.2
+    image: apache/kafka:4.3.0
     deploy:
       resources:
         limits:
