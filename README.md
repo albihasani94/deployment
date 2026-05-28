@@ -9,6 +9,17 @@ The `deployment` directory packages a Docker Compose stack that wires together t
 - Docker
 - The `ostock/*` images available locally or pulled from a registry (`config-server`, `eureka-server`, `gateway`, `organization-service`, `licensing-service`).
 
+## Dependency Updates
+
+Renovate scans the Compose files for container image updates. Local application images under `ostock/*` are ignored because they are built from the owning service repositories.
+
+Renovate groups related infrastructure image updates into focused PRs:
+
+- `ELK Stack`
+- `Observability Stack`
+
+PostgreSQL, Keycloak, Kafka, Kafbat UI, and Redis updates are intentionally left separate so runtime issues are easier to diagnose.
+
 ## Run The Stack
 
 From this repository execute:
