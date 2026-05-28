@@ -22,7 +22,7 @@ PostgreSQL, Keycloak, Kafka, Kafbat UI, and Redis updates are intentionally left
 
 ## Run The Stack
 
-From this repository execute:
+From this directory execute:
 
 ```sh
 docker compose up
@@ -42,7 +42,7 @@ Jaeger runs with in-memory trace storage at `http://localhost:16686`. Spring Boo
 
 Prometheus runs at `http://localhost:9090`. In the full stack, Prometheus scrapes the Licensing Service at `licensing-service:8080/actuator/prometheus`. Metrics are pulled by Prometheus; they are not pushed through Logstash or the OpenTelemetry Collector in this local setup.
 
-Grafana runs at `http://localhost:3000` with anonymous login enabled for local-development. Grafana is provisioned with Prometheus as its default data source and a `Spring Microservices / Licensing Service Metrics` dashboard.
+Grafana runs at `http://localhost:3000` with anonymous admin access enabled for local development; the login form is disabled. Grafana is provisioned with Prometheus as its default data source and a `Licensing Service Metrics` dashboard.
 
 The Elastic stack runs with local-development security disabled. Kibana is available at `http://localhost:5601`, and Elasticsearch is available at `http://localhost:9200`. The full-stack Compose file forwards Config Server, Eureka, Gateway, Organization Service, and Licensing Service stdout and stderr logs to Fluent Bit with Docker's Fluentd-compatible logging driver. Fluent Bit parses Spring Boot ECS JSON log lines and forwards JSON Lines to Logstash at `logstash:5000`; Logstash indexes ECS events into daily `local-spring-logs-*` indices. Create a Kibana data view for `local-spring-logs-*` to browse aggregated logs.
 
@@ -85,6 +85,8 @@ The `bruno/` collection contains host-side requests for the local Compose deploy
 
 Collection-wide pre-request auth in `bruno/opencollection.yml` refreshes `admin_token` by running `keycloak/admin auth` when a protected request uses bearer auth. Protected requests reference that token with `{{admin_token}}`.
 
+The Keycloak container bootstraps only the Keycloak admin account. Bruno auth requests assume the `spring-microservices` realm, `ostock` client, and local users such as `admin@ostock.com` already exist in the shared `deployment_keycloak_data` volume. On a fresh Keycloak volume, create or import that realm before running protected Bruno requests.
+
 ## Run Local Infrastructure
 
 To start the shared infrastructure needed by services launched from an IDE, use the local Compose file:
@@ -121,7 +123,7 @@ jvm_memory_used_bytes{job="spring-boot-docker"}
 http_server_requests_seconds_count{job="spring-boot-docker"}
 ```
 
-Open Grafana at `http://localhost:3000` and sign in with `admin` / `admin`. The `Spring Microservices / Licensing Service Metrics` dashboard is provisioned automatically. It uses Prometheus queries filtered by the `service="licensing-service"` label, and the scrape job selector lets you switch between `spring-boot-docker` and `spring-boot-dev` when both exist.
+Open Grafana at `http://localhost:3000`; anonymous admin access is enabled for local development. The `Licensing Service Metrics` dashboard is provisioned automatically. It uses Prometheus queries filtered by the `service="licensing-service"` label, and the scrape job selector lets you switch between `spring-boot-docker` and `spring-boot-dev` when both exist.
 
 For IDE-launched applications started with `docker-compose.local.yml`, use:
 
