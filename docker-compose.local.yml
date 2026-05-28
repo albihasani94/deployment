@@ -196,7 +196,7 @@ services:
       - observability
 
   prometheus:
-    image: prom/prometheus:v3.11.3
+    image: prom/prometheus:v3.12.0
     deploy:
       resources:
         limits:
