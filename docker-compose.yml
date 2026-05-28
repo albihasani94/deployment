@@ -173,7 +173,7 @@ services:
     networks:
       - observability
   otel-collector:
-    image: otel/opentelemetry-collector:0.152.1
+    image: otel/opentelemetry-collector:0.153.0
     command: ["--config=/etc/otelcol/config.yml"]
     deploy:
       resources:
