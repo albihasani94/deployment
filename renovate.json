@@ -11,11 +11,10 @@
       "enabled": false
     },
     {
-      "groupName": "ELK + Fluent Bit",
+      "groupName": "ELK Stack",
       "matchPackageNames": [
         "docker.elastic.co/elasticsearch/elasticsearch",
         "docker.elastic.co/logstash/logstash",
-        "cr.fluentbit.io/fluent/fluent-bit",
         "docker.elastic.co/kibana/kibana"
       ]
     },
@@ -25,14 +24,8 @@
         "cr.jaegertracing.io/jaegertracing/jaeger",
         "otel/opentelemetry-collector",
         "prom/prometheus",
-        "grafana/grafana"
-      ]
-    },
-    {
-      "groupName": "Kafka Stack",
-      "matchPackageNames": [
-        "apache/kafka",
-        "ghcr.io/kafbat/kafka-ui"
+        "grafana/grafana",
+        "cr.fluentbit.io/fluent/fluent-bit"
       ]
     }
   ]
