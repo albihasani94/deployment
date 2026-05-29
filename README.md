@@ -4,6 +4,115 @@
 
 The `deployment` directory packages a Docker Compose stack that wires together the Config Server, Eureka, Gateway, Keycloak, Kafka, Redis, the service containers, PostgreSQL instances, and local observability tools. Use it when you need the full microservices suite running locally.
 
+## Topology
+
+The stack is intentionally shaped around a small set of durable boundaries: host API traffic enters through the Gateway, containers talk through Compose DNS names, platform services provide config/auth/discovery, each service owns its state, and observability is built in from the first request.
+
+```mermaid
+flowchart LR
+    host["Host clients<br/>Browser, Bruno, IDE"]
+
+    subgraph Entry["Published local entry points"]
+        gateway["gateway<br/>localhost:8072<br/>API edge"]
+        keycloakUi["keycloak<br/>localhost:8082<br/>realm and token admin"]
+        observeUis["Observability UIs<br/>Jaeger 16686<br/>Kibana 5601<br/>Grafana 3000"]
+    end
+
+    subgraph Platform["Runtime platform"]
+        config["config-service<br/>central docker-profile config"]
+        eureka["eurekaserver<br/>service registry and discovery"]
+        keycloak["keycloak<br/>OAuth/OIDC authority"]
+    end
+
+    subgraph Domain["Domain services"]
+        org["organization-service<br/>organization API"]
+        licensing["licensing-service<br/>license API"]
+    end
+
+    subgraph State["State, cache, and events"]
+        orgDb["organization_db<br/>PostgreSQL seed data"]
+        licensingDb["licensing_db<br/>PostgreSQL seed data"]
+        redis["redis<br/>licensing cache"]
+        kafka["kafka<br/>domain event bus"]
+        kafbat["kafbat-ui<br/>Kafka browser"]
+        keycloakDb["keycloak_db<br/>shared Keycloak state"]
+    end
+
+    subgraph Observability["Observability feedback loops"]
+        otel["otel-collector<br/>trace routing"]
+        jaeger["jaeger<br/>trace search"]
+        fluent["fluent-bit<br/>container log forwarder"]
+        logstash["logstash<br/>ECS log indexing"]
+        elastic["elasticsearch<br/>local log store"]
+        kibana["kibana<br/>log exploration"]
+        prometheus["prometheus<br/>metrics scrape"]
+        grafana["grafana<br/>service dashboards"]
+    end
+
+    host -->|HTTP through edge| gateway
+    host -->|realm and token setup| keycloakUi
+    host -->|trace, log, and metric views| observeUis
+
+    gateway -->|organization API traffic| org
+    gateway -->|licensing API traffic| licensing
+
+    gateway -->|fetches docker config| config
+    eureka -->|fetches docker config| config
+    org -->|fetches docker config| config
+    licensing -->|fetches docker config| config
+    gateway -->|registers and discovers| eureka
+    org -->|registers and discovers| eureka
+    licensing -->|registers and discovers| eureka
+
+    keycloakUi -->|administers| keycloak
+    org -->|validates JWTs| keycloak
+    licensing -->|validates JWTs| keycloak
+    keycloak -->|persists realms and users| keycloakDb
+
+    org -->|JDBC| orgDb
+    licensing -->|JDBC| licensingDb
+    licensing -->|cache lookups| redis
+    org -->|publishes and consumes events| kafka
+    licensing -->|publishes and consumes events| kafka
+    kafbat -->|read-only inspection| kafka
+
+    gateway -->|OTLP traces| otel
+    eureka -->|OTLP traces| otel
+    org -->|OTLP traces| otel
+    licensing -->|OTLP traces| otel
+    otel -->|forwards traces| jaeger
+
+    config -->|ECS JSON stdout| fluent
+    eureka -->|ECS JSON stdout| fluent
+    gateway -->|ECS JSON stdout| fluent
+    org -->|ECS JSON stdout| fluent
+    licensing -->|ECS JSON stdout| fluent
+    fluent -->|JSON Lines| logstash
+    logstash -->|daily local-spring-logs-* indices| elastic
+    elastic -->|discover logs| kibana
+
+    licensing -->|/actuator/prometheus| prometheus
+    prometheus -->|default data source| grafana
+
+    observeUis -.->|trace search| jaeger
+    observeUis -.->|log discovery| kibana
+    observeUis -.->|metrics dashboards| grafana
+
+    classDef hostNode fill:#fff7d6,stroke:#d59e00,color:#332300;
+    classDef entryNode fill:#e8f3ff,stroke:#2f80ed,color:#102a43;
+    classDef controlNode fill:#f1e8ff,stroke:#8b5cf6,color:#2d1654;
+    classDef domainNode fill:#e9fbe7,stroke:#3c9f45,color:#12351a;
+    classDef stateNode fill:#fff0f1,stroke:#e05265,color:#4a1019;
+    classDef observeNode fill:#e6faf5,stroke:#0f9f83,color:#063c32;
+
+    class host hostNode;
+    class gateway,keycloakUi,observeUis entryNode;
+    class config,eureka,keycloak controlNode;
+    class org,licensing domainNode;
+    class orgDb,licensingDb,redis,kafka,kafbat,keycloakDb stateNode;
+    class otel,jaeger,fluent,logstash,elastic,kibana,prometheus,grafana observeNode;
+```
+
 ## Prerequisites
 
 - Docker
@@ -30,7 +139,7 @@ docker compose up
 
 This command starts the PostgreSQL containers, waits for the Config Server health check to pass, and then launches the dependent services.
 
-The Eureka, Organization Service, and Licensing Service containers run with the `docker` profile enabled, so they load the network-aware configuration served by the Config Server. The Gateway also runs with the `docker` profile enabled, and its deployment-specific port, Eureka URL, and routes are set directly in `docker-compose.yml`.
+The Eureka, Organization Service, Licensing Service, and Gateway containers run with the `docker` profile enabled, so they load network-aware configuration served by the Config Server. The Gateway routes full-stack host API traffic to the domain services through Eureka service names.
 
 Keycloak runs in development mode at `http://localhost:8082` with the bootstrap admin account `admin` / `admin`. Other containers on the Compose network can reach it at `http://keycloak:8080`.
 
@@ -72,7 +181,7 @@ Spring Boot Actuator Prometheus endpoint
 -> Prometheus UI or Grafana dashboard
 ```
 
-The gateway is exposed at `http://localhost:8072`. Example gateway URLs:
+The gateway is exposed at `http://localhost:8072` and is the host entry point for full-stack domain API requests. The Organization Service and Licensing Service containers are not published directly to the host in the full stack; other containers reach them by Compose DNS name. Example gateway URLs:
 
 ```text
 http://localhost:8072/organization-service/v1/organization/{organizationId}
@@ -81,7 +190,7 @@ http://localhost:8072/licensing-service/v1/organization/{organizationId}/license
 
 ## Bruno API Collection
 
-The `bruno/` collection contains host-side requests for the local Compose deployment. Requests use host-published URLs such as `http://localhost:8072`, `http://localhost:8082`, `http://localhost:8080`, `http://localhost:8081`, `http://localhost:8071`, and `http://localhost:8070`.
+The `bruno/` collection contains host-side requests for the local Compose deployment. Use the `gateway/` requests for full-stack domain APIs; the duplicated `gateway/licensing/` and `gateway/organization/` folders call API endpoints through `http://localhost:8072`. Service actuator requests stay out of the gateway path. The top-level `licensing/` and `organization/` folders keep direct-service requests for IDE-launched services on host ports `8080` and `8081`.
 
 Collection-wide pre-request auth in `bruno/opencollection.yml` refreshes `admin_token` by running `keycloak/admin auth` when a protected request uses bearer auth. Protected requests reference that token with `{{admin_token}}`.
 
