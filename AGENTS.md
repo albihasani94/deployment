@@ -68,7 +68,7 @@ This folder owns the local Docker Compose deployment. Treat
   Organization publishes changes to Kafka; Licensing consumes update/delete
   events to evict Redis-cached Organization lookups.
 - Before finalizing Mermaid changes, install the local npm tooling with
-  `npm install --ignore-scripts`, then render with
+  `npm install`, then render with
   `npm run render:mermaid -- -i <input>.mmd -o <output>.png`. Inspect the PNG
   for edge-label clarity, overlap, and misleading implied access paths. Keep the
   Mermaid CLI version pinned in `package.json` so Renovate can manage updates.
