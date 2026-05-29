@@ -1,0 +1,58 @@
+info:
+  name: Update Organization
+  type: http
+  seq: 3
+
+http:
+  method: PUT
+  url: http://localhost:8072/organization-service/v1/organization/
+  headers:
+    - name: Content-Type
+      value: application/json
+    - name: User-Agent
+      value: insomnia/10.1.1
+  body:
+    type: json
+    data: |-
+      {
+        "contactName": "Admin",
+        "contactEmail": "illaryhs@gmail.com",
+        "name": "OptimaGrowth - Test for kafbat-ui",
+        "contactPhone": "888888888",
+        "organizationId": 9
+      }
+  auth:
+    type: bearer
+    token: "{{admin_token}}"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: false
+  maxRedirects: 5
+
+docs: |+
+  Imported from HAR file 'Insomnia_2025-09-28.har'
+  Created by Insomnia REST Client insomnia.desktop.app:v11.6.1
+
+  Infos about the HAR entry:
+
+  ## Timings
+
+  Send HTTP request: 0 ms
+  Wait HTTP response: 56.1 ms
+  Receive HTTP response: 0 ms
+
+  ## Response
+
+  ### Headers
+
+  ```
+  HTTP/1.1 200 
+  Content-Length: 0
+  Date: Sun, 08 Dec 2024 21:47:41 GMT
+  ```
+
+  ### Body
+
+

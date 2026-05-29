@@ -1,0 +1,59 @@
+info:
+  name: Create New Organization
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: http://localhost:8072/organization-service/v1/organization/
+  headers:
+    - name: Content-Type
+      value: application/json
+    - name: User-Agent
+      value: insomnia/10.1.1
+      disabled: true
+  body:
+    type: json
+    data: |-
+      {
+        "contactName": "Admin",
+        "contactEmail": "illaryhs@gmail.com",
+        "name": "OptimaGrowth - Test for kafbat-ui",
+        "contactPhone": "888888888"
+      }
+  auth:
+    type: bearer
+    token: "{{admin_token}}"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: false
+  maxRedirects: 5
+
+docs: |
+  Imported from HAR file 'Insomnia_2025-09-28.har'
+  Created by Insomnia REST Client insomnia.desktop.app:v11.6.1
+
+  Infos about the HAR entry:
+
+  ## Timings
+
+  Send HTTP request: 0 ms
+  Wait HTTP response: 34.4 ms
+  Receive HTTP response: 0 ms
+
+  ## Response
+
+  ### Headers
+
+  ```
+  HTTP/1.1 200 
+  Content-Type: application/json
+  Transfer-Encoding: chunked
+  Date: Sun, 08 Dec 2024 21:50:23 GMT
+  ```
+
+  ### Body
+
+  {"organizationId":1,"name":"OptimaGrowth - POST creation","contactName":"Admin","contactEmail":"illaryhs@gmail.com","contactPhone":"888888888"}

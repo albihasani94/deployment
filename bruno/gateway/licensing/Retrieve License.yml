@@ -1,0 +1,50 @@
+info:
+  name: Retrieve License
+  type: http
+  seq: 1
+
+http:
+  method: GET
+  url: http://localhost:8072/licensing-service/v1/organization/optimaGrowth/license/1
+  headers:
+    - name: User-Agent
+      value: insomnia/10.1.1
+  body:
+    type: text
+    data: ""
+  auth:
+    type: bearer
+    token: "{{admin_token}}"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: false
+  maxRedirects: 5
+
+docs: |
+  Imported from HAR file 'Insomnia_2025-09-28.har'
+  Created by Insomnia REST Client insomnia.desktop.app:v11.6.1
+
+  Infos about the HAR entry:
+
+  ## Timings
+
+  Send HTTP request: 0 ms
+  Wait HTTP response: 14.6 ms
+  Receive HTTP response: 0 ms
+
+  ## Response
+
+  ### Headers
+
+  ```
+  HTTP/1.1 200 
+  Content-Type: application/hal+json
+  Transfer-Encoding: chunked
+  Date: Mon, 16 Dec 2024 16:54:14 GMT
+  ```
+
+  ### Body
+
+  {"licenseId":1,"description":"Software Product","organizationId":2,"productName":"Ostock","licenseType":"complete","comment":"I AM DEV","_links":{"self":{"href":"http://localhost:8072/licensing-service/v1/organization/{organizationId}/license/1","templated":true},"createLicense":{"href":"http://localhost:8072/licensing-service/v1/organization/{organizationId}/license","templated":true},"updateLicense":{"href":"http://localhost:8072/licensing-service/v1/organization/{organizationId}/license","templated":true},"deleteLicense":{"href":"http://localhost:8072/licensing-service/v1/organization/{organizationId}/license/1","templated":true}}}

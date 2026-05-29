@@ -1,0 +1,51 @@
+info:
+  name: SPRING
+  type: http
+  seq: 8
+
+http:
+  method: GET
+  url: http://localhost:8072/licensing-service/v1/organization/optimaGrowth/license/1/SPRING
+  headers:
+    - name: User-Agent
+      value: insomnia/10.1.1
+  body:
+    type: text
+    data: ""
+  auth:
+    type: bearer
+    token: "{{admin_token}}"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: false
+  maxRedirects: 5
+
+docs: |
+  Imported from HAR file 'Insomnia_2025-09-28.har'
+  Created by Insomnia REST Client insomnia.desktop.app:v11.6.1
+
+  Infos about the HAR entry:
+
+  ## Timings
+
+  Send HTTP request: 0 ms
+  Wait HTTP response: 2962514 seconds
+  Receive HTTP response: 0 ms
+
+  ## Response
+
+  ### Headers
+
+  ```
+  HTTP/1.1 500 
+  Content-Type: application/json
+  Transfer-Encoding: chunked
+  Date: Mon, 16 Dec 2024 18:45:45 GMT
+  Connection: close
+  ```
+
+  ### Body
+
+  {"timestamp":"2024-12-16T18:45:45.750+00:00","status":500,"error":"Internal Server Error","path":"/v1/organization/optimaGrowth/license/1/SPRING"}

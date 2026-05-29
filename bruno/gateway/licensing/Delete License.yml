@@ -1,0 +1,50 @@
+info:
+  name: Delete License
+  type: http
+  seq: 4
+
+http:
+  method: DELETE
+  url: http://localhost:8072/licensing-service/v1/organization/optimaGrowth/license/1
+  headers:
+    - name: User-Agent
+      value: insomnia/10.1.1
+  body:
+    type: text
+    data: ""
+  auth:
+    type: bearer
+    token: "{{admin_token}}"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: false
+  maxRedirects: 5
+
+docs: |
+  Imported from HAR file 'Insomnia_2025-09-28.har'
+  Created by Insomnia REST Client insomnia.desktop.app:v11.6.1
+
+  Infos about the HAR entry:
+
+  ## Timings
+
+  Send HTTP request: 0 ms
+  Wait HTTP response: 27 ms
+  Receive HTTP response: 0 ms
+
+  ## Response
+
+  ### Headers
+
+  ```
+  HTTP/1.1 200 
+  Content-Type: text/plain;charset=UTF-8
+  Content-Length: 26
+  Date: Tue, 19 Nov 2024 21:17:37 GMT
+  ```
+
+  ### Body
+
+  Deleting license with id 2

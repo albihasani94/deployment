@@ -333,8 +333,6 @@ services:
         condition: service_started
       fluent-bit:
         condition: service_started
-    ports:
-      - "8081:8081"
     networks:
       - organization
       - config
@@ -366,8 +364,6 @@ services:
         condition: service_started
       fluent-bit:
         condition: service_started
-    ports:
-      - "8080:8080"
     networks:
       - licensing
       - config

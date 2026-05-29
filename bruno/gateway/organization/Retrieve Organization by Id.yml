@@ -1,0 +1,51 @@
+info:
+  name: Retrieve Organization by Id
+  type: http
+  seq: 1
+
+http:
+  method: GET
+  url: http://localhost:8072/organization-service/v1/organization/2
+  headers:
+    - name: User-Agent
+      value: insomnia/10.1.1
+      disabled: true
+  body:
+    type: text
+    data: ""
+  auth:
+    type: bearer
+    token: "{{admin_token}}"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: false
+  maxRedirects: 5
+
+docs: |
+  Imported from HAR file 'Insomnia_2025-09-28.har'
+  Created by Insomnia REST Client insomnia.desktop.app:v11.6.1
+
+  Infos about the HAR entry:
+
+  ## Timings
+
+  Send HTTP request: 0 ms
+  Wait HTTP response: 8.2 ms
+  Receive HTTP response: 0 ms
+
+  ## Response
+
+  ### Headers
+
+  ```
+  HTTP/1.1 200 
+  Content-Type: application/json
+  Transfer-Encoding: chunked
+  Date: Mon, 16 Dec 2024 16:55:11 GMT
+  ```
+
+  ### Body
+
+  {"organizationId":2,"name":"OptimaGrowth","contactName":"Admin","contactEmail":"illaryhs@gmail.com","contactPhone":"888888888"}
