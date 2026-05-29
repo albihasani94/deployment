@@ -6,52 +6,42 @@ The `deployment` directory packages a Docker Compose stack that wires together t
 
 ## Topology
 
-The stack is intentionally shaped around a small set of durable boundaries: host API traffic enters through the Gateway, containers talk through Compose DNS names, platform services provide config/auth/discovery, each service owns its state, and observability is built in from the first request.
+The stack is intentionally shaped around a small set of durable boundaries: host API traffic enters through the Gateway, containers talk through Compose DNS names, platform services provide config/auth/discovery, each service owns its state, and telemetry is collected without changing application call paths.
+
+### Runtime Topology
+
+This view focuses on request flow, service coordination, state ownership, and messaging.
 
 ```mermaid
 flowchart LR
     host["Host clients<br/>Browser, Bruno, IDE"]
 
-    subgraph Entry["Published local entry points"]
+    subgraph Entry["Host-published entry points"]
         gateway["gateway<br/>localhost:8072<br/>API edge"]
         keycloakUi["keycloak<br/>localhost:8082<br/>realm and token admin"]
-        observeUis["Observability UIs<br/>Jaeger 16686<br/>Kibana 5601<br/>Grafana 3000"]
     end
 
     subgraph Platform["Runtime platform"]
         config["config-service<br/>central docker-profile config"]
-        eureka["eurekaserver<br/>service registry and discovery"]
+        eureka["eurekaserver<br/>service registry"]
         keycloak["keycloak<br/>OAuth/OIDC authority"]
     end
 
     subgraph Domain["Domain services"]
-        org["organization-service<br/>organization API"]
-        licensing["licensing-service<br/>license API"]
+        org["organization-service<br/>internal organization API"]
+        licensing["licensing-service<br/>internal license API"]
     end
 
-    subgraph State["State, cache, and events"]
-        orgDb["organization_db<br/>PostgreSQL seed data"]
-        licensingDb["licensing_db<br/>PostgreSQL seed data"]
+    subgraph State["Owned state, cache, and events"]
+        orgDb["organization_db<br/>Organization PostgreSQL"]
+        licensingDb["licensing_db<br/>Licensing PostgreSQL"]
         redis["redis<br/>licensing cache"]
         kafka["kafka<br/>domain event bus"]
-        kafbat["kafbat-ui<br/>Kafka browser"]
-        keycloakDb["keycloak_db<br/>shared Keycloak state"]
-    end
-
-    subgraph Observability["Observability feedback loops"]
-        otel["otel-collector<br/>trace routing"]
-        jaeger["jaeger<br/>trace search"]
-        fluent["fluent-bit<br/>container log forwarder"]
-        logstash["logstash<br/>ECS log indexing"]
-        elastic["elasticsearch<br/>local log store"]
-        kibana["kibana<br/>log exploration"]
-        prometheus["prometheus<br/>metrics scrape"]
-        grafana["grafana<br/>service dashboards"]
+        keycloakDb["keycloak_db<br/>Keycloak PostgreSQL"]
     end
 
     host -->|HTTP through edge| gateway
     host -->|realm and token setup| keycloakUi
-    host -->|trace, log, and metric views| observeUis
 
     gateway -->|organization API traffic| org
     gateway -->|licensing API traffic| licensing
@@ -74,43 +64,84 @@ flowchart LR
     licensing -->|cache lookups| redis
     org -->|publishes and consumes events| kafka
     licensing -->|publishes and consumes events| kafka
-    kafbat -->|read-only inspection| kafka
-
-    gateway -->|OTLP traces| otel
-    eureka -->|OTLP traces| otel
-    org -->|OTLP traces| otel
-    licensing -->|OTLP traces| otel
-    otel -->|forwards traces| jaeger
-
-    config -->|ECS JSON stdout| fluent
-    eureka -->|ECS JSON stdout| fluent
-    gateway -->|ECS JSON stdout| fluent
-    org -->|ECS JSON stdout| fluent
-    licensing -->|ECS JSON stdout| fluent
-    fluent -->|JSON Lines| logstash
-    logstash -->|daily local-spring-logs-* indices| elastic
-    elastic -->|discover logs| kibana
-
-    prometheus -->|scrapes /actuator/prometheus| licensing
-    prometheus -->|default data source| grafana
-
-    observeUis -.->|trace search| jaeger
-    observeUis -.->|log discovery| kibana
-    observeUis -.->|metrics dashboards| grafana
 
     classDef hostNode fill:#fff7d6,stroke:#d59e00,color:#332300;
     classDef entryNode fill:#e8f3ff,stroke:#2f80ed,color:#102a43;
     classDef controlNode fill:#f1e8ff,stroke:#8b5cf6,color:#2d1654;
     classDef domainNode fill:#e9fbe7,stroke:#3c9f45,color:#12351a;
     classDef stateNode fill:#fff0f1,stroke:#e05265,color:#4a1019;
-    classDef observeNode fill:#e6faf5,stroke:#0f9f83,color:#063c32;
-
     class host hostNode;
-    class gateway,keycloakUi,observeUis entryNode;
+    class gateway,keycloakUi entryNode;
     class config,eureka,keycloak controlNode;
     class org,licensing domainNode;
-    class orgDb,licensingDb,redis,kafka,kafbat,keycloakDb stateNode;
-    class otel,jaeger,fluent,logstash,elastic,kibana,prometheus,grafana observeNode;
+    class orgDb,licensingDb,redis,kafka,keycloakDb stateNode;
+```
+
+### Observability Pipelines
+
+This view separates telemetry collection and inspection from the request path.
+
+```mermaid
+flowchart LR
+    host["Host clients<br/>Browser, Bruno, IDE"]
+
+    subgraph Sources["Signal sources"]
+        apps["Spring Boot containers<br/>config-service<br/>eurekaserver<br/>gateway<br/>organization-service<br/>licensing-service"]
+        licensingMetrics["licensing-service<br/>/actuator/prometheus"]
+        kafka["kafka<br/>domain event bus"]
+    end
+
+    subgraph Traces["Trace pipeline"]
+        otel["otel-collector<br/>OTLP trace routing"]
+        jaeger["jaeger<br/>localhost:16686"]
+    end
+
+    subgraph Logs["Log pipeline"]
+        fluent["fluent-bit<br/>container log forwarder"]
+        logstash["logstash<br/>ECS log indexing"]
+        elastic["elasticsearch<br/>local-spring-logs-*"]
+        kibana["kibana<br/>localhost:5601"]
+    end
+
+    subgraph Metrics["Metrics pipeline"]
+        prometheus["prometheus<br/>localhost:9090"]
+        grafana["grafana<br/>localhost:3000"]
+    end
+
+    subgraph Events["Event inspection"]
+        kafbat["kafbat-ui<br/>localhost:8085"]
+    end
+
+    apps -->|OTLP traces| otel
+    otel -->|forwards traces| jaeger
+
+    apps -->|ECS JSON stdout| fluent
+    fluent -->|JSON Lines| logstash
+    logstash -->|indexes ECS events| elastic
+    kibana -->|queries logs| elastic
+
+    prometheus -->|scrapes| licensingMetrics
+    grafana -->|queries data source| prometheus
+
+    kafbat -->|read-only inspection| kafka
+    host -.->|trace search| jaeger
+    host -.->|log discovery| kibana
+    host -.->|metrics dashboards| grafana
+    host -.->|event inspection| kafbat
+
+    classDef hostNode fill:#fff7d6,stroke:#d59e00,color:#332300;
+    classDef appNode fill:#e9fbe7,stroke:#3c9f45,color:#12351a;
+    classDef traceNode fill:#e8f3ff,stroke:#2f80ed,color:#102a43;
+    classDef logNode fill:#f1e8ff,stroke:#8b5cf6,color:#2d1654;
+    classDef metricNode fill:#e6faf5,stroke:#0f9f83,color:#063c32;
+    classDef eventNode fill:#fff0f1,stroke:#e05265,color:#4a1019;
+
+    class host hostNode;
+    class apps,licensingMetrics appNode;
+    class otel,jaeger traceNode;
+    class fluent,logstash,elastic,kibana logNode;
+    class prometheus,grafana metricNode;
+    class kafka,kafbat eventNode;
 ```
 
 ## Prerequisites
