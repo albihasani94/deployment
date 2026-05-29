@@ -32,12 +32,15 @@ flowchart LR
         licensing["licensing-service<br/>internal license API"]
     end
 
-    subgraph State["Owned state, cache, and events"]
+    subgraph State["Persistence and cache"]
         orgDb["organization_db<br/>Organization PostgreSQL"]
         licensingDb["licensing_db<br/>Licensing PostgreSQL"]
         redis["redis<br/>licensing cache"]
-        kafka["kafka<br/>domain event bus"]
         keycloakDb["keycloak_db<br/>Keycloak PostgreSQL"]
+    end
+
+    subgraph Messaging["Async data pipeline"]
+        kafka["kafka<br/>organization.events topic"]
     end
 
     host -->|HTTP through edge| gateway
@@ -45,6 +48,7 @@ flowchart LR
 
     gateway -->|organization API traffic| org
     gateway -->|licensing API traffic| licensing
+    licensing -->|organization lookup| org
 
     gateway -->|fetches docker config| config
     eureka -->|fetches docker config| config
@@ -62,19 +66,21 @@ flowchart LR
     org -->|JDBC| orgDb
     licensing -->|JDBC| licensingDb
     licensing -->|cache lookups| redis
-    org -->|publishes and consumes events| kafka
-    licensing -->|publishes and consumes events| kafka
+    org -->|publishes organization changes| kafka
+    kafka -->|delivers organization events| licensing
 
     classDef hostNode fill:#fff7d6,stroke:#d59e00,color:#332300;
     classDef entryNode fill:#e8f3ff,stroke:#2f80ed,color:#102a43;
     classDef controlNode fill:#f1e8ff,stroke:#8b5cf6,color:#2d1654;
     classDef domainNode fill:#e9fbe7,stroke:#3c9f45,color:#12351a;
     classDef stateNode fill:#fff0f1,stroke:#e05265,color:#4a1019;
+    classDef messagingNode fill:#fff7d6,stroke:#d59e00,color:#332300;
     class host hostNode;
     class gateway,keycloakUi entryNode;
     class config,eureka,keycloak controlNode;
     class org,licensing domainNode;
-    class orgDb,licensingDb,redis,kafka,keycloakDb stateNode;
+    class orgDb,licensingDb,redis,keycloakDb stateNode;
+    class kafka messagingNode;
 ```
 
 ### Observability Pipelines
