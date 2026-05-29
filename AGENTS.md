@@ -67,9 +67,11 @@ This folder owns the local Docker Compose deployment. Treat
 - Show Kafka and Redis as complementary cache-coherence mechanisms:
   Organization publishes changes to Kafka; Licensing consumes update/delete
   events to evict Redis-cached Organization lookups.
-- Before finalizing Mermaid changes, render with
-  `npx -y @mermaid-js/mermaid-cli` and inspect the PNG for edge-label clarity,
-  overlap, and misleading implied access paths.
+- Before finalizing Mermaid changes, install the local npm tooling with
+  `npm install --ignore-scripts`, then render with
+  `npm run render:mermaid -- -i <input>.mmd -o <output>.png`. Inspect the PNG
+  for edge-label clarity, overlap, and misleading implied access paths. Keep the
+  Mermaid CLI version pinned in `package.json` so Renovate can manage updates.
 
 ## Bruno
 

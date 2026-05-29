@@ -1,0 +1,11 @@
+{
+  "name": "deployment",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "render:mermaid": "mmdc"
+  },
+  "devDependencies": {
+    "@mermaid-js/mermaid-cli": "11.15.0"
+  }
+}

@@ -27,6 +27,12 @@
         "grafana/grafana",
         "cr.fluentbit.io/fluent/fluent-bit"
       ]
+    },
+    {
+      "groupName": "Documentation Tooling",
+      "matchPackageNames": [
+        "@mermaid-js/mermaid-cli"
+      ]
     }
   ]
 }
