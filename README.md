@@ -48,7 +48,7 @@ flowchart LR
 
     gateway -->|organization API traffic| org
     gateway -->|licensing API traffic| licensing
-    licensing -->|organization lookup| org
+    licensing -->|synchronous organization lookup<br/>REST, Feign, Spring HTTP interface,<br/>or Eureka discovery| org
 
     gateway -->|fetches docker config| config
     eureka -->|fetches docker config| config
