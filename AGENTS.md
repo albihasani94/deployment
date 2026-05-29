@@ -54,6 +54,23 @@ This folder owns the local Docker Compose deployment. Treat
   `localhost:5000` only when indexed logs are needed.
 - Prometheus scrapes metrics; keep metrics separate from tracing and logging.
 
+## README Mermaid Diagrams
+
+- Keep topology diagrams self-describing: label runtime boundary, host entry
+  points, domain services, state, messaging, and observability separately.
+- Do not imply host-direct access to internal Spring services in the full-stack
+  flow; route domain API traffic through `gateway`.
+- Keep actuator and observability paths separate from gateway-routed domain
+  APIs.
+- For Licensing to Organization, show all supported lookup modes: REST, Feign,
+  Spring HTTP interface, and Eureka discovery.
+- Show Kafka and Redis as complementary cache-coherence mechanisms:
+  Organization publishes changes to Kafka; Licensing consumes update/delete
+  events to evict Redis-cached Organization lookups.
+- Before finalizing Mermaid changes, render with
+  `npx -y @mermaid-js/mermaid-cli` and inspect the PNG for edge-label clarity,
+  overlap, and misleading implied access paths.
+
 ## Bruno
 
 - `bruno/` is host-side, so requests use host-published URLs:
