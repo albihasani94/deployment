@@ -35,7 +35,7 @@ flowchart LR
     subgraph State["Persistence and cache"]
         orgDb["organization_db<br/>Organization PostgreSQL"]
         licensingDb["licensing_db<br/>Licensing PostgreSQL"]
-        redis["redis<br/>licensing cache"]
+        redis["redis<br/>organization lookup cache"]
         keycloakDb["keycloak_db<br/>Keycloak PostgreSQL"]
     end
 
@@ -65,9 +65,9 @@ flowchart LR
 
     org -->|JDBC| orgDb
     licensing -->|JDBC| licensingDb
-    licensing -->|cache lookups| redis
+    licensing -->|read/write/evict organization cache| redis
     org -->|publishes organization changes| kafka
-    kafka -->|delivers organization events| licensing
+    kafka -->|update/delete events trigger cache eviction| licensing
 
     classDef hostNode fill:#fff7d6,stroke:#d59e00,color:#332300;
     classDef entryNode fill:#e8f3ff,stroke:#2f80ed,color:#102a43;
@@ -92,7 +92,8 @@ flowchart LR
     host["Host clients<br/>Browser, Bruno, IDE"]
 
     subgraph Sources["Signal sources"]
-        apps["Spring Boot containers<br/>config-service<br/>eurekaserver<br/>gateway<br/>organization-service<br/>licensing-service"]
+        tracedApps["Trace-enabled services<br/>gateway<br/>organization-service<br/>licensing-service"]
+        loggedApps["Log-aggregated services<br/>config-service<br/>eurekaserver<br/>gateway<br/>organization-service<br/>licensing-service"]
         licensingMetrics["licensing-service<br/>/actuator/prometheus"]
         kafka["kafka<br/>domain event bus"]
     end
@@ -118,10 +119,10 @@ flowchart LR
         kafbat["kafbat-ui<br/>localhost:8085"]
     end
 
-    apps -->|OTLP traces| otel
+    tracedApps -->|OTLP traces| otel
     otel -->|forwards traces| jaeger
 
-    apps -->|ECS JSON stdout| fluent
+    loggedApps -->|ECS JSON stdout| fluent
     fluent -->|JSON Lines| logstash
     logstash -->|indexes ECS events| elastic
     kibana -->|queries logs| elastic
@@ -143,7 +144,7 @@ flowchart LR
     classDef eventNode fill:#fff0f1,stroke:#e05265,color:#4a1019;
 
     class host hostNode;
-    class apps,licensingMetrics appNode;
+    class tracedApps,loggedApps,licensingMetrics appNode;
     class otel,jaeger traceNode;
     class fluent,logstash,elastic,kibana logNode;
     class prometheus,grafana metricNode;
