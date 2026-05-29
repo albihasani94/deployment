@@ -91,7 +91,7 @@ flowchart LR
     logstash -->|daily local-spring-logs-* indices| elastic
     elastic -->|discover logs| kibana
 
-    licensing -->|/actuator/prometheus| prometheus
+    prometheus -->|scrapes /actuator/prometheus| licensing
     prometheus -->|default data source| grafana
 
     observeUis -.->|trace search| jaeger
