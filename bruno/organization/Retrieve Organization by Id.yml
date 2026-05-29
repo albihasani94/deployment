@@ -5,7 +5,7 @@ info:
 
 http:
   method: GET
-  url: http://localhost:8081/v1/organization/2
+  url: http://localhost:8081/v1/organization/1
   headers:
     - name: User-Agent
       value: insomnia/10.1.1
