@@ -148,7 +148,7 @@ services:
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
       KAFKA_CLUSTERS_0_READONLY: "true"
   redis:
-    image: redis:8.6.3-alpine
+    image: redis:8.8.0-alpine
     deploy:
       resources:
         limits:
