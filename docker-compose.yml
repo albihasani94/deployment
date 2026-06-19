@@ -163,7 +163,7 @@ services:
       timeout: 3s
       retries: 10
   jaeger:
-    image: cr.jaegertracing.io/jaegertracing/jaeger:2.18.0
+    image: cr.jaegertracing.io/jaegertracing/jaeger:2.19.0
     deploy:
       resources:
         limits:
@@ -173,7 +173,7 @@ services:
     networks:
       - observability
   otel-collector:
-    image: otel/opentelemetry-collector:0.153.0
+    image: otel/opentelemetry-collector:0.154.0
     command: ["--config=/etc/otelcol/config.yml"]
     deploy:
       resources:
@@ -235,7 +235,7 @@ services:
     networks:
       - observability
   fluent-bit:
-    image: cr.fluentbit.io/fluent/fluent-bit:5.0.6
+    image: cr.fluentbit.io/fluent/fluent-bit:5.0.7
     deploy:
       resources:
         limits:
@@ -415,7 +415,7 @@ services:
     networks:
       - observability
   grafana:
-    image: grafana/grafana:13.0.1
+    image: grafana/grafana:13.0.2
     deploy:
       resources:
         limits:
