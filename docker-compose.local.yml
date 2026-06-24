@@ -48,7 +48,7 @@ services:
       KC_METRICS_ENABLED: "true"
 
   kafka:
-    image: apache/kafka:4.3.0
+    image: apache/kafka:4.3.1
     deploy:
       resources:
         limits:
