@@ -173,7 +173,7 @@ services:
     networks:
       - observability
   otel-collector:
-    image: otel/opentelemetry-collector:0.154.0
+    image: otel/opentelemetry-collector:0.155.0
     command: ["--config=/etc/otelcol/config.yml"]
     deploy:
       resources:
@@ -235,7 +235,7 @@ services:
     networks:
       - observability
   fluent-bit:
-    image: cr.fluentbit.io/fluent/fluent-bit:5.0.7
+    image: cr.fluentbit.io/fluent/fluent-bit:5.0.8
     deploy:
       resources:
         limits:
@@ -415,7 +415,7 @@ services:
     networks:
       - observability
   grafana:
-    image: grafana/grafana:13.0.2
+    image: grafana/grafana:13.1.0
     deploy:
       resources:
         limits:
