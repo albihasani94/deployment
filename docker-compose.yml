@@ -73,7 +73,7 @@ services:
       timeout: 2s
       retries: 15
   keycloak:
-    image: quay.io/keycloak/keycloak:26.6.2
+    image: quay.io/keycloak/keycloak:26.6.4
     deploy:
       resources:
         limits:
