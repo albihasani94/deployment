@@ -196,7 +196,7 @@ services:
       - observability
 
   prometheus:
-    image: prom/prometheus:v3.12.0
+    image: prom/prometheus:v3.13.0
     deploy:
       resources:
         limits:
@@ -208,7 +208,7 @@ services:
     networks:
       - observability
   grafana:
-    image: grafana/grafana:13.0.2
+    image: grafana/grafana:13.1.0
     deploy:
       resources:
         limits:
