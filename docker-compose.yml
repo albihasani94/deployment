@@ -131,7 +131,7 @@ services:
       timeout: 10s
       retries: 12
   kafbat-ui:
-    image: ghcr.io/kafbat/kafka-ui:v1.5.0
+    image: ghcr.io/kafbat/kafka-ui:v1.5.1
     deploy:
       resources:
         limits:
